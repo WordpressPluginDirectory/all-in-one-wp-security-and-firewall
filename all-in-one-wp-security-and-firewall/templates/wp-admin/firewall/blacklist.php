@@ -35,7 +35,7 @@ if (!defined('AIOWPSECURITY_NOADS_B') || !AIOWPSECURITY_NOADS_B) {
 				<p>
 					<?php
 						$read_link = '<a href="https://aiosplugin.com/important-note-on-intermediate-and-advanced-features" target="_blank">' . __('must read this message', 'all-in-one-wp-security-and-firewall') . '</a>';
-						echo sprintf(__('This feature can lock you out of admin if it doesn\'t work correctly on your site. You %s before activating this feature.', 'all-in-one-wp-security-and-firewall'), $read_link);
+						echo __('This feature can lock you out of admin if it doesn\'t work correctly on your site.', 'all-in-one-wp-security-and-firewall'). ' ' . sprintf(__('You %s before activating this feature.', 'all-in-one-wp-security-and-firewall'), $read_link);
 					?>
 				</p>
 			</div>

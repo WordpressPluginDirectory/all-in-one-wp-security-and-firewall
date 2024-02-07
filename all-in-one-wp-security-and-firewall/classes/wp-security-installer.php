@@ -9,8 +9,8 @@ class AIOWPSecurity_Installer {
 		'2.0.2' => array(
 			'clean_audit_log_stacktraces',
 		),
-		'2.0.7' => array(
-			'add_ip_lookup_result_field_to_ip_lockout_table',
+		'2.0.8' => array(
+			'update_table_column_to_timestamp',
 		)
 	);
 
@@ -81,7 +81,6 @@ class AIOWPSecurity_Installer {
 			$aiowps_global_meta_tbl_name = $wpdb->prefix.'aiowps_global_meta';
 			$aiowps_event_tbl_name = $wpdb->prefix.'aiowps_events';
 			$perm_block_tbl_name = $wpdb->prefix.'aiowps_permanent_block';
-			
 		} else {
 			$lockout_tbl_name = AIOWPSEC_TBL_LOGIN_LOCKOUT;
 			$aiowps_global_meta_tbl_name = AIOWPSEC_TBL_GLOBAL_META_DATA;
@@ -109,12 +108,15 @@ class AIOWPSecurity_Installer {
 		user_id bigint(20) NOT NULL,
 		user_login VARCHAR(150) NOT NULL,
 		lockdown_date datetime NOT NULL DEFAULT '1000-10-10 10:00:00',
+		created INTEGER UNSIGNED,
 		release_date datetime NOT NULL DEFAULT '1000-10-10 10:00:00',
+		released INTEGER UNSIGNED,
 		failed_login_ip varchar(100) NOT NULL DEFAULT '',
 		lock_reason varchar(128) NOT NULL DEFAULT '',
 		unlock_key varchar(128) NOT NULL DEFAULT '',
 		is_lockout_email_sent tinyint(1) NOT NULL DEFAULT '1',
 		backtrace_log text NOT NULL DEFAULT '',
+		ip_lookup_result LONGTEXT DEFAULT NULL,
 		PRIMARY KEY  (id),
 		  KEY failed_login_ip (failed_login_ip),
 		  KEY is_lockout_email_sent (is_lockout_email_sent),
@@ -145,6 +147,7 @@ class AIOWPSecurity_Installer {
 		username VARCHAR(150),
 		user_id bigint(20),
 		event_date datetime NOT NULL DEFAULT '1000-10-10 10:00:00',
+		created INTEGER UNSIGNED,
 		ip_or_host varchar(100),
 		referer_info varchar(255),
 		url varchar(255),
@@ -296,53 +299,42 @@ class AIOWPSecurity_Installer {
 	}
 
 	/**
-	 * This function will add the ip result lookup column to the login lockdown table
+	 * This function will update the table datetime column to timestamp with backward compability
 	 *
 	 * @return void
 	 */
-	public static function add_ip_lookup_result_field_to_ip_lockout_table() {
-		global $wpdb;
-
-		$column_name = 'ip_lookup_result';
-		if (is_multisite()) {
-			$blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
-			foreach ($blogids as $blog_id) {
-				switch_to_blog($blog_id);
-				$login_lockdown_table = $wpdb->prefix.'aiowps_login_lockdown';
-				self::add_column_to_table($column_name, $login_lockdown_table);
-				restore_current_blog();
-			}
-		} else {
-			$login_lockdown_table = AIOWPSEC_TBL_LOGIN_LOCKOUT;
-			self::add_column_to_table($column_name, $login_lockdown_table);
-		}
-
+	public static function update_table_column_to_timestamp() {
+		self::update_column_to_timestamp(AIOWPSEC_TBL_EVENTS, 'event_date', 'created');
+		self::update_column_to_timestamp(AIOWPSEC_TBL_LOGIN_LOCKOUT, 'lockdown_date', 'created');
+		self::update_column_to_timestamp(AIOWPSEC_TBL_LOGIN_LOCKOUT, 'release_date', 'released');
 	}
-
+	
 	/**
-	 * This function adds a column to a specified table
+	 * Update the table column to UTC timestamp not depending on the timezone of the user or server settings
 	 *
-	 * @param string $column_name - This is the column being added to the table
-	 * @param string $table_name  - This is the table name we are adding the column to
+	 * @global wpdb $wpdb
 	 *
-	 * @return void
+	 * @param string $table_name
+	 * @param string $field_datetime
+	 * @param string $field_timestamp
+	 *
+	 * @return boolean - returns the rows updated or not
 	 */
-	public static function add_column_to_table($column_name, $table_name) {
-		global $wpdb, $aio_wp_security;
-
-		// Check if the column already exists
-		$column_exists = $wpdb->get_var("SHOW COLUMNS FROM $table_name LIKE '$column_name'");
-
-		if (!$column_exists) {
-			// Add the new column to the table
-			$result = $wpdb->query("ALTER TABLE `{$table_name}` ADD COLUMN `$column_name` LONGTEXT DEFAULT NULL");
-			if (false === $result) {
-				$error_message = empty($wpdb->last_error) ? "Error creating column $column_name in $table_name" : $wpdb->last_error;
-				$aio_wp_security->debug_logger->log_debug($error_message, 4);
-			}
+	public static function update_column_to_timestamp($table_name, $field_datetime, $field_timestamp) {
+		global $wpdb;
+		$offset = 0;
+		if (AIOWPSEC_TBL_EVENTS == $table_name || AIOWPSEC_TBL_LOGIN_LOCKOUT == $table_name) {
+			//MySQL UNIX_TIMESTAMP will convert datetime based on local timezone not UTC
+			$offset = $wpdb->get_var("SELECT TIMESTAMPDIFF(SECOND, NOW(), UTC_TIMESTAMP())");
 		}
+		if (function_exists('is_multisite') && is_multisite() && AIOWPSEC_TBL_EVENTS == $table_name) {
+			$table_name = $wpdb->prefix.'aiowps_events';
+		} elseif (function_exists('is_multisite') && is_multisite() && AIOWPSEC_TBL_LOGIN_LOCKOUT == $table_name) {
+			$table_name = $wpdb->prefix.'aiowps_login_lockdown';
+		}
+		//offset to make sure UTC timestamp updated
+		$wpdb->query($wpdb->prepare("UPDATE $table_name SET $field_timestamp = (UNIX_TIMESTAMP($field_datetime) - %d)", $offset));
 	}
-
 
 	public static function create_db_backup_dir() {
 		global $aio_wp_security;

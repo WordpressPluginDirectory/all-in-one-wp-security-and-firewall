@@ -39,21 +39,21 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 				'render_callback' => array($this, 'render_htaccess_file_operations'),
 				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
 			),
-			'wp-config-file-operations' =>  array(
+			'wp-config-file-operations' => array(
 				'title' => 'wp-config.php '.__('file', 'all-in-one-wp-security-and-firewall'),
 				'render_callback' => array($this, 'render_wp_config_file_operations'),
 				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
 			),
-			'delete-plugin-settings' =>  array(
+			'delete-plugin-settings' => array(
 				'title' => __('Delete plugin settings', 'all-in-one-wp-security-and-firewall'),
 				'render_callback' => array($this, 'render_delete_plugin_settings_tab'),
 				'display_condition_callback' => 'is_super_admin',
 			),
-			'wp-version-info' =>  array(
+			'wp-version-info' => array(
 				'title' => __('WP version info', 'all-in-one-wp-security-and-firewall'),
 				'render_callback' => array($this, 'render_wp_version_info'),
 			),
-			'settings-file-operations' =>  array(
+			'settings-file-operations' => array(
 				'title' => __('Import/Export', 'all-in-one-wp-security-and-firewall'),
 				'render_callback' => array($this, 'render_settings_file_operations'),
 			),
@@ -87,7 +87,7 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 				$this->show_msg_updated($msg['updated']);
 			}
 			if (isset($msg['error'])) {
-				foreach($msg['error'] as $key => $error_message) {
+				foreach ($msg['error'] as $error_message) {
 					$this->show_msg_error($error_message);
 				}
 			}
@@ -148,7 +148,7 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 		if (isset($_POST['aiowps_save_htaccess'])) { // Do form submission tasks
 			$nonce = $_REQUEST['_wpnonce'];
 			if (!wp_verify_nonce($nonce, 'aiowpsec-save-htaccess-nonce')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed on htaccess file save.",4);
+				$aio_wp_security->debug_logger->log_debug("Nonce check failed on htaccess file save.", 4);
 				die("Nonce check failed on htaccess file save.");
 			}
 
@@ -159,22 +159,22 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 				$aiowps_backup_dir = WP_CONTENT_DIR.'/'.AIO_WP_SECURITY_BACKUPS_DIR_NAME;
 				if (rename($aiowps_backup_dir.'/'.'.htaccess.backup', $aiowps_backup_dir.'/'.$random_prefix.'_htaccess_backup.txt')) {
 					echo '<div id="message" class="updated fade"><p>';
-					_e('Your .htaccess file was successfully backed up! Using an FTP program go to the "/wp-content/aiowps_backups" directory to save a copy of the file to your computer.','all-in-one-wp-security-and-firewall');
+					_e('Your .htaccess file was successfully backed up! Using an FTP program go to the "/wp-content/aiowps_backups" directory to save a copy of the file to your computer.', 'all-in-one-wp-security-and-firewall');
 					echo '</p></div>';
 				} else {
-					$aio_wp_security->debug_logger->log_debug("htaccess file rename failed during backup!",4);
-					$this->show_msg_error(__('htaccess file rename failed during backup. Please check your root directory for the backup file using FTP.','all-in-one-wp-security-and-firewall'));
+					$aio_wp_security->debug_logger->log_debug("htaccess file rename failed during backup!", 4);
+					$this->show_msg_error(__('.htaccess file rename failed during backup, please check your root directory for the backup file using FTP.', 'all-in-one-wp-security-and-firewall'));
 				}
 			} else {
-				$aio_wp_security->debug_logger->log_debug("htaccess - Backup operation failed!",4);
-				$this->show_msg_error(__('htaccess backup failed.','all-in-one-wp-security-and-firewall'));
+				$aio_wp_security->debug_logger->log_debug("htaccess - Backup operation failed!", 4);
+				$this->show_msg_error(__('htaccess backup failed.', 'all-in-one-wp-security-and-firewall'));
 			}
 		}
 
 		if (isset($_POST['aiowps_restore_htaccess'])) { // Do form submission tasks
 			$nonce = $_REQUEST['_wpnonce'];
 			if (!wp_verify_nonce($nonce, 'aiowpsec-restore-htaccess-nonce')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed on htaccess file restore.",4);
+				$aio_wp_security->debug_logger->log_debug("Nonce check failed on htaccess file restore.", 4);
 				die("Nonce check failed on htaccess file restore.");
 			}
 
@@ -185,17 +185,17 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 				//TODO
 				//Verify that file chosen has contents which are relevant to .htaccess file
 				$is_htaccess = AIOWPSecurity_Utility_Htaccess::check_if_htaccess_contents($htaccess_file_contents);
-				if ($is_htaccess == 1) {
+				if (1 == $is_htaccess) {
 					if (!file_put_contents($htaccess_path, $htaccess_file_contents)) {
 						//Failed to make a backup copy
-						$aio_wp_security->debug_logger->log_debug("htaccess - Restore from .htaccess operation failed.",4);
-						$this->show_msg_error(__('htaccess file restore failed. Please attempt to restore the .htaccess manually using FTP.','all-in-one-wp-security-and-firewall'));
+						$aio_wp_security->debug_logger->log_debug("htaccess - Restore from .htaccess operation failed.", 4);
+						$this->show_msg_error(__('.htaccess file restore failed, please attempt to restore the .htaccess manually using FTP.', 'all-in-one-wp-security-and-firewall'));
 					} else {
 						$this->show_msg_updated(__('Your .htaccess file has successfully been restored.', 'all-in-one-wp-security-and-firewall'));
 					}
 				} else {
-					$aio_wp_security->debug_logger->log_debug("htaccess restore failed - Contents of restore file appear invalid.",4);
-					$this->show_msg_error(__('htaccess Restore operation failed. Please check the contents of the file you are trying to restore from.','all-in-one-wp-security-and-firewall'));
+					$aio_wp_security->debug_logger->log_debug("htaccess restore failed - Contents of restore file appear invalid.", 4);
+					$this->show_msg_error(__('htaccess restore operation failed, please check the contents of the file you are trying to restore from.', 'all-in-one-wp-security-and-firewall'));
 				}
 			}
 		}
@@ -214,7 +214,7 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 		if (isset($_POST['aiowps_restore_wp_config'])) { // Do form submission tasks
 			$nonce = $_REQUEST['_wpnonce'];
 			if (!wp_verify_nonce($nonce, 'aiowpsec-restore-wp-config-nonce')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed on wp-config file restore.",4);
+				$aio_wp_security->debug_logger->log_debug("Nonce check failed on wp-config file restore.", 4);
 				die('Nonce check failed on wp-config file restore.');
 			}
 
@@ -225,18 +225,18 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 
 				//Verify that file chosen is a wp-config.file
 				$is_wp_config = $this->check_if_wp_config_contents($wp_config_file_contents);
-				if ($is_wp_config == 1) {
+				if (1 == $is_wp_config) {
 					$active_root_wp_config = AIOWPSecurity_Utility_File::get_wp_config_file_path();
 					if (!file_put_contents($active_root_wp_config, $wp_config_file_contents)) {
 						//Failed to make a backup copy
-						$aio_wp_security->debug_logger->log_debug("wp-config.php - Restore from backed up wp-config operation failed.",4);
-						$this->show_msg_error(__('wp-config.php file restore failed. Please attempt to restore this file manually using FTP.','all-in-one-wp-security-and-firewall'));
+						$aio_wp_security->debug_logger->log_debug("wp-config.php - Restore from backed up wp-config operation failed.", 4);
+						$this->show_msg_error(__('wp-config.php file restore failed, please attempt to restore this file manually using FTP.', 'all-in-one-wp-security-and-firewall'));
 					} else {
 						$this->show_msg_updated(__('Your wp-config.php file has successfully been restored.', 'all-in-one-wp-security-and-firewall'));
 					}
 				} else {
-					$aio_wp_security->debug_logger->log_debug("wp-config.php restore failed - Contents of restore file appear invalid.",4);
-					$this->show_msg_error(__('wp-config.php Restore operation failed. Please check the contents of the file you are trying to restore from.','all-in-one-wp-security-and-firewall'));
+					$aio_wp_security->debug_logger->log_debug("wp-config.php restore failed - Contents of restore file appear invalid.", 4);
+					$this->show_msg_error(__('wp-config.php restore operation failed, please check the contents of the file you are trying to restore from.', 'all-in-one-wp-security-and-firewall'));
 				}
 			}
 		}
@@ -282,8 +282,8 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 		if (isset($_POST['aiowps_save_remove_wp_meta_info'])) { // Do form submission tasks
 			$nonce = $_REQUEST['_wpnonce'];
 			if (!wp_verify_nonce($nonce, 'aiowpsec-remove-wp-meta-info-nonce')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed on remove wp meta info options save!",4);
-				die("Nonce check failed on remove wp meta info options save!");
+				$aio_wp_security->debug_logger->log_debug("Nonce check failed on remove wp meta info options save.", 4);
+				die("Nonce check failed on remove wp meta info options save.");
 			}
 			$aio_wp_security->configs->set_value('aiowps_remove_wp_generator_meta_info', isset($_POST["aiowps_remove_wp_generator_meta_info"]) ? '1' : '', true);
 
@@ -303,7 +303,7 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 	 */
 	protected function render_settings_file_operations() {
 		global $aio_wp_security, $aiowps_firewall_config, $simba_two_factor_authentication;
-		global $wpdb;
+
 
 		$events_table_name = AIOWPSEC_TBL_EVENTS;
 		
@@ -327,7 +327,7 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 				// Verify that file chosen has valid AIOS settings contents
 				$aiowps_settings_file_contents = $this->check_if_valid_aiowps_settings_content($import_file_contents);
 
-				if ($aiowps_settings_file_contents != -1) {
+				if (-1 != $aiowps_settings_file_contents) {
 					$is_enabled_cookie_bruteforce_before_import = $aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention');
 					// Apply the settings
 					$settings_array = json_decode($aiowps_settings_file_contents, true);
@@ -377,9 +377,9 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 						$is_enabled_cookie_bruteforce = $aio_wp_security->configs->get_value('aiowps_enable_brute_force_attack_prevention');
 						if ($is_enabled_cookie_bruteforce_before_import != $is_enabled_cookie_bruteforce && 1 == $is_enabled_cookie_bruteforce) {
 							$url = 'admin.php?page='.AIOWPSEC_SETTINGS_MENU_SLUG."&tab=settings-file-operations&success=import_settings";
-						 	$url.=  (!empty($aio_wp_security->configs->get_value('aiowps_brute_force_secret_word'))) ? '&'.$aio_wp_security->configs->get_value('aiowps_brute_force_secret_word').'=1' : '';
+							$url.= (!empty($aio_wp_security->configs->get_value('aiowps_brute_force_secret_word'))) ? '&'.$aio_wp_security->configs->get_value('aiowps_brute_force_secret_word').'=1' : '';
 							$url.= (!$res) ? '&error=write_htaccess' : '';
-							AIOWPSecurity_Utility::redirect_to_url(admin_url(sanitize_url($url)));			
+							AIOWPSecurity_Utility::redirect_to_url(admin_url(sanitize_url($url)));
 						}
 							
 						$this->show_msg_updated($msg_updated);
@@ -389,8 +389,8 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 					}
 				} else {
 					// Invalid settings file
-					$aio_wp_security->debug_logger->log_debug("The contents of your settings file are invalid.",4);
-					$this->show_msg_error(__('The contents of your settings file are invalid. Please check the contents of the file you are trying to import settings from.','all-in-one-wp-security-and-firewall'));
+					$aio_wp_security->debug_logger->log_debug("The contents of your settings file are invalid.", 4);
+					$this->show_msg_error(__('The contents of your settings file are invalid, please check the contents of the file you are trying to import settings from.', 'all-in-one-wp-security-and-firewall'));
 				}
 			}
 		}
@@ -442,8 +442,8 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 		}
 
 		$ip_retrieve_methods_postfixes = array(
-				'REMOTE_ADDR' =>  __('Default - if correct, then this is the best option', 'all-in-one-wp-security-and-firewall'),
-				'HTTP_CF_CONNECTING_IP' => __("Only use if you're using Cloudflare.", 'all-in-one-wp-security-and-firewall'),
+			'REMOTE_ADDR' => __('Default - if correct, then this is the best option', 'all-in-one-wp-security-and-firewall'),
+			'HTTP_CF_CONNECTING_IP' => __("Only use if you're using Cloudflare.", 'all-in-one-wp-security-and-firewall'),
 		);
 
 		$ip_retrieve_methods = array();
@@ -480,7 +480,7 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 	private function check_if_wp_config_contents($file_contents) {
 		$is_wp_config = false;
 
-		if ($file_contents == '' || $file_contents == NULL || $file_contents == false) {
+		if ('' == $file_contents || false == $file_contents) {
 			return -1;
 		}
 
@@ -497,7 +497,7 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 	/**
 	 * Check if valid aios settings text
 	 *
-	 * @param string $text Settings text
+	 * @param string $text - Settings text
 	 *
 	 * @return boolean
 	 */
@@ -513,7 +513,7 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 	 * @return string|boolean|int
 	 */
 	private function check_if_valid_aiowps_settings_content($file_contents) {
-		if ($file_contents == '' || $file_contents == NULL || $file_contents == false) {
+		if ('' == $file_contents || false == $file_contents) {
 			return -1;
 		}
 
@@ -527,4 +527,4 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 		}
 	}
 
-} //end class
+}

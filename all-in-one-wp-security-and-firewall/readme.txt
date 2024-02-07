@@ -5,7 +5,7 @@ Tags: security, malware scanning, two factor authentication, firewall, login sec
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 6.4
-Stable tag: 5.2.5
+Stable tag: 5.2.7
 License: GPLv3 or later
 
 Protect your website investment with All-In-One Security (AIOS) – a comprehensive and easy to use security plugin designed especially for WordPress. Featuring login security tools, a cutting-edge firewall and much more.
@@ -211,6 +211,50 @@ Go to the settings menu after you activate the plugin and follow the instruction
 1. Features list.
 
 == Changelog ==
+
+= 5.2.7 - 06/Feb/2024 =
+
+* SECURITY: Added nonce checks to various list table actions to prevent a CSRF vulnerability. Thanks to dhakal_ananda for disclosing this defect. This would allow an attacker who persuaded a logged-in administrator to visit a specially crafted link to perform actions on the 404 event records.
+
+= 5.2.6 - 06/Feb/2024 =
+
+* SECURITY: Removed unnecessary use of the "tab" query parameter on various admin menu pages to prevent a non-persistent XSS vulnerability. Thanks to Matthew Rollings for disclosing this defect. (This would allow an attacker who deliberately targets you whilst logged in as an administrator and persuades you to visit a link he controls to inject unwanted scripts on a single visit to your AIOS admin page).
+* FEATURE: Added logout event to the audit logs
+* FEATURE: Add ability to delete the default readme.html file and wp-config-sample.php file
+* FIX: Correct some translation calls that were using the wrong text domain
+* FIX: PHP notice caused by the file scanner being unable to read its data file
+* FIX: Unlock request button was not showing and redirects to 127.0.0.1
+* FIX: Database errors for the aiowps_login_lockdown table during plugin installation
+* TWEAK: Refactor the 6G UI
+* TWEAK: Added an option to set the Cloudflare Turnstile CAPTCHA theme
+* TWEAK: Added CSS styling for audit log details column
+* TWEAK: Dashboard critical feature status links fixed and only show features that can be enabled in a multisite subsite
+* TWEAK: Deactivating the plugin now removes stored login info so on the next activation users are not force logged out
+* TWEAK: Display json string instead of null if json_decode does not work for audit log details
+* TWEAK: Event table existing datetime field converted to timestamp to be timezone independent
+* TWEAK: Various tweaks to get codebase up to coding standards
+* TWEAK: Various tweaks to ensure multiple sentences are not passed to a single translation function
+* TWEAK: Fix the broken UI for RSS and Atom firewall settings and added a more info box
+* TWEAK: Fix the issue of unique ID in DOM
+* TWEAK: Merge Username and Display Name tabs in User Security Settings 
+* TWEAK: Moved the '404 detection' tab to the 'Brute force' admin menu
+* TWEAK: Moved the 'PHP file editing' tab into 'File Protection' tab
+* TWEAK: Moved the 'User enumeration' tab into the 'User accounts' tab in the User Security Menu
+* TWEAK: Moved the 'WP Rest API' tab into the Firewall Menu
+* TWEAK: Moved the 'Copy protection' and 'Frames' tab into the Filesystem security menu
+* TWEAK: Moved the 'Salt' tab into the User security menu
+* TWEAK: Moved 'Blacklist Manager' tab into the Firewall menu.
+* TWEAK: Password resets, removed and deleted users are now recorded in the audit log
+* TWEAK: Stop 404 IP from being locked if there's a current lock on that IP
+* TWEAK: Unify date and time conversion with users timezone support
+* TWEAK: Changed how empty data in ip lookup result is stored in the database
+* TWEAK: Rework Firewall Menu page to have two tabs for PHP and .htaccess rules
+* TWEAK: Add captcha support for Contact Form 7
+* TWEAK: Added a AJAX save settings and get features details badge function as part of ongoing work to add AJAX support to the plugin settings
+* TWEAK: Enhance reset password email by adding IP info
+* TWEAK: Remove defunct imagetoolbar meta tag
+* TWEAK: Login lockout tables existing datetime field converted to timestamp to be timezone independent
+* TWEAK: Code improvements - utilising WP_Error objects instead of arrays
 
 = 5.2.5 - 25/Oct/2023 =
 
@@ -1339,4 +1383,4 @@ those who want to enable the basic firewall but do not have "AllowOverride" opti
 - First commit to the WP repository.
 
 == Upgrade Notice ==
-* 5.2.5: Block POST requests that have a blank user-agent and referer. Prevent a work-around on multisite for login page hiding. Various tweaks, fixes and improvements. See changelog for full details. A recommended update for all.
+* 5.2.7: Feature to remove the default readme and wp-config-sample, option to set the Cloudflare Turnstile CAPTCHA theme. Fix a CSRF and non-persistent XSS vulnerability. Various tweaks, fixes and improvements. See changelog for full details. A recommended update for all.

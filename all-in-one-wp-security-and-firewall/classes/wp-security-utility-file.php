@@ -11,8 +11,8 @@ class AIOWPSecurity_Utility_File {
 	public $files_and_dirs_to_check;
 
 	public function __construct() {
-		 // Let's initialize our class variable array with all of the files and/or directories we wish to check permissions for.
-		 // NOTE: we can add to this list in future if we wish
+		// Let's initialize our class variable array with all of the files and/or directories we wish to check permissions for.
+		// NOTE: we can add to this list in future if we wish
 
 		//Get wp-config.php file path
 		$wp_config_path = AIOWPSecurity_Utility_File::get_wp_config_file_path();

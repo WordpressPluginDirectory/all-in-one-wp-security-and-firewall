@@ -57,6 +57,7 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->set_value('aiowps_enable_woo_lostpassword_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_woo_register_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_lost_password_captcha', '');//Checkbox
+		$aio_wp_security->configs->set_value('aiowps_enable_contact_form_7_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_captcha_secret_key', AIOWPSecurity_Utility::generate_alpha_numeric_random_string(20)); // Hidden secret value which will be used to do some CAPTCHA processing. This will be assigned a random string generated when CAPTCHA settings saved
 
 		//Login Whitelist feature
@@ -76,6 +77,7 @@ class AIOWPSecurity_Configure_Settings {
 		AIOWPSecurity_Utility::enable_file_edits();
 		$aio_wp_security->configs->set_value('aiowps_disable_file_editing', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_prevent_default_wp_file_access', '');//Checkbox
+		$aio_wp_security->configs->set_value('aiowps_auto_delete_default_wp_files', ''); // Checkbox
 		$aio_wp_security->configs->set_value('aiowps_system_log_file', 'error_log');
 
 		//Blacklist feature
@@ -240,6 +242,7 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->add_value('aiowps_enable_woo_login_captcha', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_woo_register_captcha', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_woo_lostpassword_captcha', '');//Checkbox
+		$aio_wp_security->configs->set_value('aiowps_enable_contact_form_7_captcha', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_captcha_secret_key', AIOWPSecurity_Utility::generate_alpha_numeric_random_string(20)); // Hidden secret value which will be used to do some CAPTCHA processing. This will be assigned a random string generated when CAPTCHA settings saved
 
 		//User registration
@@ -254,6 +257,7 @@ class AIOWPSecurity_Configure_Settings {
 		//Filesystem Security feature
 		$aio_wp_security->configs->add_value('aiowps_disable_file_editing', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_prevent_default_wp_file_access', '');//Checkbox
+		$aio_wp_security->configs->add_value('aiowps_auto_delete_default_wp_files', ''); // Checkbox
 		$aio_wp_security->configs->add_value('aiowps_system_log_file', 'error_log');
 
 
@@ -328,7 +332,7 @@ class AIOWPSecurity_Configure_Settings {
 		//Prevent users enumeration
 		$aio_wp_security->configs->add_value('aiowps_prevent_users_enumeration', '');//Checkbox
 
-	   //REST API Security
+		//REST API Security
 		$aio_wp_security->configs->add_value('aiowps_disallow_unauthorized_rest_requests', '');//Checkbox
 
 		// IP retrieval setting

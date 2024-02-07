@@ -8,9 +8,9 @@ if (!class_exists('AIO_WP_Security')) {
 
 	class AIO_WP_Security {
 
-		public $version = '5.2.5';
+		public $version = '5.2.7';
 
-		public $db_version = '2.0.7';
+		public $db_version = '2.0.8';
 
 		public $firewall_version = '1.0.6';
 
@@ -153,6 +153,7 @@ if (!class_exists('AIO_WP_Security')) {
 			define('AIOWPSEC_MISC_MENU_SLUG', 'aiowpsec_misc');
 			define('AIOWPSEC_TWO_FACTOR_AUTH_MENU_SLUG', 'aiowpsec_two_factor_auth_user');
 			define('AIOWPSEC_TOOLS_MENU_SLUG', 'aiowpsec_tools');
+			define('AIOWPSEC_CAPTCHA_SHORTCODE', 'aios_captcha');
 			
 			if (!defined('AIOS_TFA_PREMIUM_LATEST_INCOMPATIBLE_VERSION')) define('AIOS_TFA_PREMIUM_LATEST_INCOMPATIBLE_VERSION', '1.14.7');
 			

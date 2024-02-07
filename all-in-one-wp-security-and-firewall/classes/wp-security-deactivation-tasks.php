@@ -24,6 +24,9 @@ class AIOWPSecurity_Deactivation_Tasks extends AIOWPSecurity_Base_Tasks {
 			// Remove all firewall and other .htaccess rules and remove all settings from .htaccess file that were added by this plugin
 			AIOWPSecurity_Configure_Settings::turn_off_all_firewall_rules();
 			AIOWPSecurity_Configure_Settings::turn_off_cookie_based_bruteforce_firewall_configs();
+			
+			// Remove user meta info so next activation if force logout on it do not logs user out
+			AIOWPSecurity_User_Login::remove_login_activity();
 
 			// Deactivates PHP-based firewall
 			AIOWPSecurity_Utility_Firewall::remove_firewall();

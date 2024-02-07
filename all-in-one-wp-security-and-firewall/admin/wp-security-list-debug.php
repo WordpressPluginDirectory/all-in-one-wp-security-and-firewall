@@ -1,17 +1,15 @@
 <?php
-if(!defined('ABSPATH')){
+if (!defined('ABSPATH')) {
 	exit;//Exit if accessed directly
 }
 
-class AIOWPSecurity_List_Debug_Log extends AIOWPSecurity_List_Table
-{
+class AIOWPSecurity_List_Debug_Log extends AIOWPSecurity_List_Table {
 
 	/**
 	 * Sets up some table attributes (i.e: the plurals and whether it's ajax or not)
 	 */
-	public function __construct()
-	{
-		global $status, $page;
+	public function __construct() {
+
 
 		//Set parent defaults
 		parent::__construct(array(
@@ -23,14 +21,14 @@ class AIOWPSecurity_List_Debug_Log extends AIOWPSecurity_List_Table
 	}
 
 	/**
-	 * Returns the default column item
+	 * This function renders a default column item
 	 *
-	 * @param object $item
-	 * @param string $column_name
-	 * @return void
+	 * @param array  $item        - Item object
+	 * @param string $column_name - Column name to be rendered from item object
+	 *
+	 * @return mixed - data to be rendered for column
 	 */
-	public function column_default($item, $column_name)
-	{
+	public function column_default($item, $column_name) {
 		return $item[$column_name];
 	}
 
@@ -39,18 +37,16 @@ class AIOWPSecurity_List_Debug_Log extends AIOWPSecurity_List_Table
 	 *
 	 * @return array
 	 */
-	public function get_columns()
-	{
-		$columns = array(
+	public function get_columns() {
+		return array(
 			'id' => 'ID',
-			'created' => __('Date and time', 'all-in-one-security-and-firewall'),
+			'created' => __('Date and time', 'all-in-one-wp-security-and-firewall'),
 			'level' => __('Level', 'all-in-one-wp-security-and-firewall'),
 			'network_id' => __('Network ID', 'all-in-one-wp-security-and-firewall'),
 			'site_id' => __('Site ID', 'all-in-one-wp-security-and-firewall'),
 			'message' => __('Message', 'all-in-one-wp-security-and-firewall'),
 			'type' => __('Type', 'all-in-one-wp-security-and-firewall')
 		);
-		return $columns;
 	}
 
 	/**
@@ -58,9 +54,8 @@ class AIOWPSecurity_List_Debug_Log extends AIOWPSecurity_List_Table
 	 *
 	 * @return array
 	 */
-	public function get_sortable_columns()
-	{
-		$sortable_columns = array(
+	public function get_sortable_columns() {
+		return array(
 			'created' => array('created', false),
 			'level' => array('level', false),
 			'network_id' => array('network_id', false),
@@ -68,18 +63,16 @@ class AIOWPSecurity_List_Debug_Log extends AIOWPSecurity_List_Table
 			'message'=>array('message', false),
 			'type' => array('type', false)
 		);
-		return $sortable_columns;
 	}
 
 	/**
 	 * Grabs the data from database and handles the pagination
 	 *
-	 *  @param boolean $ignore_pagination - whether to not paginate
+	 * @param boolean $ignore_pagination - whether to not paginate
 	 *
 	 * @return void
 	 */
-	public function prepare_items($ignore_pagination = false)
-	{
+	public function prepare_items($ignore_pagination = false) {
 		/**
 		 * First, lets decide how many records per page to show
 		 */

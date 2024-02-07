@@ -27,7 +27,7 @@ class AIOWPSecurity_Cleanup {
 		$events_table_name = AIOWPSEC_TBL_EVENTS;
 		$purge_events_records_after_days = AIOS_PURGE_EVENTS_RECORDS_AFTER_DAYS; //purge older records in the events table
 		$purge_events_records_after_days = apply_filters('aios_purge_events_records_after_days', $purge_events_records_after_days);
-		AIOWPSecurity_Utility::purge_table_records($events_table_name, $purge_events_records_after_days, 'event_date');
+		AIOWPSecurity_Utility::purge_table_records($events_table_name, $purge_events_records_after_days, 'created');
 
 		// aiowps_perform_failed_login_cleanup_task already does it.
 
