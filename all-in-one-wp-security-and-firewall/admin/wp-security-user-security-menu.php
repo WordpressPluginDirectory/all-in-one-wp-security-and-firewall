@@ -476,32 +476,25 @@ class AIOWPSecurity_User_Security_Menu extends AIOWPSecurity_Admin_Menu {
 			$this->show_msg_updated(__('Settings were successfully saved', 'all-in-one-wp-security-and-firewall'));
 		}
 
-		if (isset($_REQUEST['action'])) { // Do list table form row action tasks
-			if ('approve_acct' == $_REQUEST['action']) { // Approve link was clicked for a row in list table
-				$nonce = isset($_REQUEST['aiowps_nonce']) ? $_REQUEST['aiowps_nonce'] : '';
-				if (!isset($nonce) || !wp_verify_nonce($nonce, 'approve_user_acct')) {
-					$aio_wp_security->debug_logger->log_debug("Nonce check failed for approve registered user account operation.", 4);
-					die(__('Nonce check failed for approve registered user account operation.', 'all-in-one-wp-security-and-firewall'));
-				}
-				$user_list->approve_selected_accounts(strip_tags($_REQUEST['user_id']));
+		if (isset($_GET['action'])) { // Do list table form row action tasks
+			$nonce = isset($_GET['aiowps_nonce']) ? $_GET['aiowps_nonce'] : '';
+			$nonce_user_cap_result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($nonce, 'registered_user_item_action');
+			
+			if (is_wp_error($nonce_user_cap_result)) {
+				$aio_wp_security->debug_logger->log_debug($nonce_user_cap_result->get_error_message(), 4);
+				die($nonce_user_cap_result->get_error_message());
 			}
 
-			if ('delete_acct' == $_REQUEST['action']) { // Delete link was clicked for a row in list table
-				$nonce = isset($_REQUEST['aiowps_nonce']) ? $_REQUEST['aiowps_nonce'] : '';
-				if (!wp_verify_nonce($nonce, 'delete_user_acct')) {
-					$aio_wp_security->debug_logger->log_debug("Nonce check failed for delete registered user account operation.", 4);
-					die(__('Nonce check failed for delete registered user account operation.', 'all-in-one-wp-security-and-firewall'));
-				}
-				$user_list->delete_selected_accounts(strip_tags($_REQUEST['user_id']));
+			if ('approve_acct' == $_GET['action']) { // Approve link was clicked for a row in list table
+				$user_list->approve_selected_accounts(strip_tags($_GET['user_id']));
 			}
 
-			if ('block_ip' == $_REQUEST['action']) { // Block IP link was clicked for a row in list table
-				$nonce = isset($_REQUEST['aiowps_nonce']) ? $_REQUEST['aiowps_nonce'] : '';
-				if (!isset($nonce) || !wp_verify_nonce($nonce, 'block_ip')) {
-					$aio_wp_security->debug_logger->log_debug("Nonce check failed for block IP operation of registered user.", 4);
-					die(__('Nonce check failed for block IP operation of registered user.', 'all-in-one-wp-security-and-firewall'));
-				}
-				$user_list->block_selected_ips(strip_tags($_REQUEST['ip_address']));
+			if ('delete_acct' == $_GET['action']) { // Delete link was clicked for a row in list table
+				$user_list->delete_selected_accounts(strip_tags($_GET['user_id']));
+			}
+
+			if ('block_ip' == $_GET['action']) { // Block IP link was clicked for a row in list table
+				$user_list->block_selected_ips(strip_tags($_GET['ip_address']));
 			}
 		}
 

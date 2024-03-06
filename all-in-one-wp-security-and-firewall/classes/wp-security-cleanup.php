@@ -35,7 +35,7 @@ class AIOWPSecurity_Cleanup {
 		$global_meta_table_name = AIOWPSEC_TBL_GLOBAL_META_DATA;
 		$purge_global_meta_records_after_days = AIOS_PURGE_GLOBAL_META_DATA_RECORDS_AFTER_DAYS; //purge older records in global meta table
 		$purge_global_meta_records_after_days = apply_filters('aios_purge_global_meta_records_after_days', $purge_global_meta_records_after_days);
-		AIOWPSecurity_Utility::purge_table_records($global_meta_table_name, $purge_global_meta_records_after_days, 'date_time');
+		AIOWPSecurity_Utility::purge_table_records($global_meta_table_name, $purge_global_meta_records_after_days, 'created');
 
 		//Delete any expired _aiowps_captcha_string_info_xxxx option
 		AIOWPSecurity_Utility::delete_expired_captcha_options();

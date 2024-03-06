@@ -339,6 +339,8 @@ class AIOWPSecurity_User_Login {
 		$is_lockout_email_sent = (1 == $aio_wp_security->configs->get_value('aiowps_enable_email_notify') ? 0 : -1);
 		$ip_lookup_result = AIOS_Helper::get_ip_reverse_lookup($ip);
 		$ip_lookup_result = json_encode($ip_lookup_result);
+		if (false === $ip_lookup_result) $ip_lookup_result = null;
+
 		$lock_seconds = $lock_minutes * MINUTE_IN_SECONDS;
 		
 		$data = array(
@@ -442,7 +444,9 @@ class AIOWPSecurity_User_Login {
 			if (isset($_POST['aiowps-woo-login'])) {
 				$date_time = current_time('mysql');
 				$data = array('date_time' => $date_time, 'meta_key1' => 'woo_unlock_request_key', 'meta_value1' => $secret_rand_key);
-				$result = $wpdb->insert(AIOWPSEC_TBL_GLOBAL_META_DATA, $data);
+				$aiowps_global_meta_tbl_name = AIOWPSEC_TBL_GLOBAL_META_DATA;
+				$sql = $wpdb->prepare("INSERT INTO ".$aiowps_global_meta_tbl_name." (date_time, meta_key1, meta_value1, created) VALUES ('%s', '%s', '%s', UNIX_TIMESTAMP())", $data['date_time'], $data['meta_key1'], $data['meta_value1']);
+				$result = $wpdb->query($sql);
 				if (false === $result) {
 					$aio_wp_security->debug_logger->log_debug("generate_unlock_request_link() - Error inserting woo_unlock_request_key to AIOWPSEC_TBL_GLOBAL_META_DATA table for secret key ".$secret_rand_key, 4);
 				}
@@ -649,10 +653,11 @@ class AIOWPSecurity_User_Login {
 		global $aio_wp_security;
 		$user = get_userdata($user_id);
 
-		if (0 === $user->ID) {
+		if (false === $user) {
 			$aio_wp_security->debug_logger->log_debug("AIOWPSecurity_User_Login::wp_logout_action_handler: Unable to get WP_User object", 4);
 			return;
 		}
+
 		$this->delete_logged_in_user($user->ID);
 
 		if (is_super_admin($user->ID)) {

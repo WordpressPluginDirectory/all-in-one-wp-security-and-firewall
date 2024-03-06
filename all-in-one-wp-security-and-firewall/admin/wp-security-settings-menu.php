@@ -46,8 +46,7 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 			),
 			'delete-plugin-settings' => array(
 				'title' => __('Delete plugin settings', 'all-in-one-wp-security-and-firewall'),
-				'render_callback' => array($this, 'render_delete_plugin_settings_tab'),
-				'display_condition_callback' => 'is_super_admin',
+				'render_callback' => array($this, 'render_delete_plugin_settings_tab')
 			),
 			'wp-version-info' => array(
 				'title' => __('WP version info', 'all-in-one-wp-security-and-firewall'),
@@ -339,7 +338,7 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 						}
 
 						if (is_main_site() && is_super_admin()) {
-							if (array_key_exists('tfa', $settings_array) && !empty($simba_two_factor_authentication->is_tfa_integrated)) {
+							if (array_key_exists('tfa', $settings_array) && true == $simba_two_factor_authentication->is_tfa_integrated) {
 								$tfa_settings_applied = $simba_two_factor_authentication->set_configs($settings_array['tfa']);
 
 								if (!$tfa_settings_applied && $simba_two_factor_authentication->get_configs() !== $settings_array['tfa']) {
@@ -348,7 +347,7 @@ class AIOWPSecurity_Settings_Menu extends AIOWPSecurity_Admin_Menu {
 							}
 
 							if (array_key_exists('firewall', $settings_array)) {
-								$aiowps_settings_applied = $aiowps_firewall_config->set_contents($settings_array['firewall']) && $aiowps_settings_applied;
+								$aiowps_settings_applied = $aiowps_settings_applied && $aiowps_firewall_config->set_contents($settings_array['firewall']);
 							}
 						}
 					} else {

@@ -516,6 +516,10 @@ class AIOWPSecurity_Utility {
 
 		$lock_seconds = $lock_minutes * MINUTE_IN_SECONDS;
 		$lock_time = current_time('mysql', true);
+		$ip_lookup_result = AIOS_Helper::get_ip_reverse_lookup($ip);
+		$ip_lookup_result = json_encode($ip_lookup_result);
+		if (false === $ip_lookup_result) $ip_lookup_result = null;
+
 		$release_time = date('Y-m-d H:i:s', time() + ($lock_seconds));
 		$data = array(
 			'user_id' => $user_id,
@@ -524,14 +528,15 @@ class AIOWPSecurity_Utility {
 			'release_date' => $release_time,
 			'failed_login_IP' => $ip,
 			'lock_reason' => $lock_reason,
-			'lock_seconds' => $lock_seconds
+			'lock_seconds' => $lock_seconds,
+			'ip_lookup_result' => $ip_lookup_result
 		);
 		
 		$result = AIOWPSecurity_Utility::add_lockout($data);
 
-		if ($result > 0) {
-		} elseif (false === $result) {
-			$aio_wp_security->debug_logger->log_debug("lock_IP: Error inserting record into " . $login_lockdown_table, 4);//Log the highly unlikely event of DB error
+		if (false === $result) {
+			$error_msg = empty($wpdb->last_error) ? "lock_IP: Error inserting record into " . $login_lockdown_table : $wpdb->last_error;
+			$aio_wp_security->debug_logger->log_debug($error_msg, 4);//Log the highly unlikely event of DB error
 		}
 	}
 	

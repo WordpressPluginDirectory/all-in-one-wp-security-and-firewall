@@ -10,37 +10,42 @@ class AIOWPSecurity_Installer {
 			'clean_audit_log_stacktraces',
 		),
 		'2.0.8' => array(
+			'update_event_table_column_to_timestamp',
+		),
+		'2.0.9' => array(
 			'update_table_column_to_timestamp',
+		),
+		'2.0.10' => array(
+			'delete_aiowps_temp_configs_option',
 		)
 	);
 
 	/**
 	 * Run installer function.
 	 *
-	 * @param boolean $networkwide
 	 * @return void
 	 */
-	public static function run_installer($networkwide = '') {
+	public static function run_installer() {
 		global $wpdb;
-		if (function_exists('is_multisite') && is_multisite() && $networkwide) {
+		if (function_exists('is_multisite') && is_multisite() && is_main_site()) {
 			// check if it is a network activation - if so, run the activation function for each blog id
-				$blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
-				foreach ($blogids as $blog_id) {
-					switch_to_blog($blog_id);
-					AIOWPSecurity_Installer::create_db_tables();
-					AIOWPSecurity_Installer::migrate_db_tables();
-					AIOWPSecurity_Installer::check_tasks();
-					AIOWPSecurity_Configure_Settings::add_option_values();
-					restore_current_blog();
-				}
-				AIOWPSecurity_Installer::create_db_backup_dir(); //Create a backup dir in the WP uploads directory
+			$blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
+			foreach ($blogids as $blog_id) {
+				switch_to_blog($blog_id);
+				AIOWPSecurity_Installer::create_db_tables();
+				AIOWPSecurity_Installer::migrate_db_tables();
+				AIOWPSecurity_Installer::check_tasks();
+				AIOWPSecurity_Configure_Settings::add_option_values();
+				restore_current_blog();
+			}
 		} else {
 			AIOWPSecurity_Installer::create_db_tables();
 			AIOWPSecurity_Installer::migrate_db_tables();
 			AIOWPSecurity_Installer::check_tasks();
 			AIOWPSecurity_Configure_Settings::add_option_values();
-			AIOWPSecurity_Installer::create_db_backup_dir(); //Create a backup dir in the WP uploads directory
 		}
+
+		AIOWPSecurity_Installer::create_db_backup_dir(); // Create a backup dir in the WP uploads directory.
 	}
 
 	/**
@@ -50,8 +55,9 @@ class AIOWPSecurity_Installer {
 	 */
 	public static function check_tasks() {
 		$our_version = AIO_WP_SECURITY_DB_VERSION;
-		$db_version = get_option('aiowpsec_db_version', '1.0');
-		if (version_compare($our_version, $db_version, '>')) {
+		$db_version = get_option('aiowpsec_db_version');
+		// database tasks not need to be run if first time install - false check added
+		if (false != $db_version && version_compare($our_version, $db_version, '>')) {
 			foreach (self::$db_tasks as $version => $updates) {
 				if (version_compare($version, $db_version, '>')) {
 					foreach ($updates as $update) {
@@ -127,6 +133,7 @@ class AIOWPSecurity_Installer {
 		$gm_tbl_sql = "CREATE TABLE " . $aiowps_global_meta_tbl_name . " (
 		meta_id bigint(20) NOT NULL auto_increment,
 		date_time datetime NOT NULL default '1000-10-10 10:00:00',
+		created INTEGER UNSIGNED,
 		meta_key1 varchar(255) NOT NULL,
 		meta_key2 varchar(255) NOT NULL,
 		meta_key3 varchar(255) NOT NULL,
@@ -163,6 +170,7 @@ class AIOWPSecurity_Installer {
 		block_reason varchar(128) NOT NULL DEFAULT '',
 		country_origin varchar(50) NOT NULL DEFAULT '',
 		blocked_date datetime NOT NULL DEFAULT '1000-10-10 10:00:00',
+		created INTEGER UNSIGNED,
 		unblock tinyint(1) NOT NULL DEFAULT '0',
 		PRIMARY KEY  (id),
 		KEY blocked_ip (blocked_ip)
@@ -191,6 +199,7 @@ class AIOWPSecurity_Installer {
 		$debug_log_tbl_sql = "CREATE TABLE " . $debug_log_tbl_name . " (
 			id bigint(20) NOT NULL AUTO_INCREMENT,
 			created datetime NOT NULL DEFAULT '1000-10-10 10:00:00',
+			logtime INTEGER UNSIGNED,
 			level varchar(25) NOT NULL DEFAULT '',
 			network_id bigint(20) NOT NULL DEFAULT '0',
 			site_id bigint(20) NOT NULL DEFAULT '0',
@@ -304,11 +313,20 @@ class AIOWPSecurity_Installer {
 	 * @return void
 	 */
 	public static function update_table_column_to_timestamp() {
-		self::update_column_to_timestamp(AIOWPSEC_TBL_EVENTS, 'event_date', 'created');
-		self::update_column_to_timestamp(AIOWPSEC_TBL_LOGIN_LOCKOUT, 'lockdown_date', 'created');
-		self::update_column_to_timestamp(AIOWPSEC_TBL_LOGIN_LOCKOUT, 'release_date', 'released');
+		$db_version = get_option('aiowpsec_db_version', '1.0');
+		if (version_compare('2.0.8', $db_version, '>')) {
+			self::update_column_to_timestamp(AIOWPSEC_TBL_EVENTS, 'event_date', 'created');
+			self::update_column_to_timestamp(AIOWPSEC_TBL_LOGIN_LOCKOUT, 'lockdown_date', 'created');
+			self::update_column_to_timestamp(AIOWPSEC_TBL_LOGIN_LOCKOUT, 'release_date', 'released');
+		}
+		
+		if (version_compare('2.0.9', $db_version, '>')) {
+			self::update_column_to_timestamp(AIOWPSEC_TBL_PERM_BLOCK, 'blocked_date', 'created');
+			self::update_column_to_timestamp(AIOWPSEC_TBL_GLOBAL_META_DATA, 'date_time', 'created');
+			self::update_column_to_timestamp(AIOWPSEC_TBL_DEBUG_LOG, 'created', 'logtime');
+		}
 	}
-	
+
 	/**
 	 * Update the table column to UTC timestamp not depending on the timezone of the user or server settings
 	 *
@@ -322,18 +340,34 @@ class AIOWPSecurity_Installer {
 	 */
 	public static function update_column_to_timestamp($table_name, $field_datetime, $field_timestamp) {
 		global $wpdb;
-		$offset = 0;
-		if (AIOWPSEC_TBL_EVENTS == $table_name || AIOWPSEC_TBL_LOGIN_LOCKOUT == $table_name) {
-			//MySQL UNIX_TIMESTAMP will convert datetime based on local timezone not UTC
-			$offset = $wpdb->get_var("SELECT TIMESTAMPDIFF(SECOND, NOW(), UTC_TIMESTAMP())");
+		//MySQL UNIX_TIMESTAMP will convert datetime based on local timezone not UTC
+		$offset = $wpdb->get_var("SELECT TIMESTAMPDIFF(SECOND, NOW(), UTC_TIMESTAMP())");
+		if (AIOWPSEC_TBL_PERM_BLOCK == $table_name || AIOWPSEC_TBL_GLOBAL_META_DATA == $table_name || AIOWPSEC_TBL_DEBUG_LOG == $table_name) {
+			//User local settings date time saved offset timezone needs to removed for UTC correct value
+			$offset += wp_timezone()->getOffset(new DateTime('now', new DateTimeZone('UTC')));
 		}
 		if (function_exists('is_multisite') && is_multisite() && AIOWPSEC_TBL_EVENTS == $table_name) {
 			$table_name = $wpdb->prefix.'aiowps_events';
 		} elseif (function_exists('is_multisite') && is_multisite() && AIOWPSEC_TBL_LOGIN_LOCKOUT == $table_name) {
 			$table_name = $wpdb->prefix.'aiowps_login_lockdown';
+		} elseif (function_exists('is_multisite') && is_multisite() && AIOWPSEC_TBL_PERM_BLOCK == $table_name) {
+			$table_name = $wpdb->prefix.'aiowps_permanent_block';
+		} elseif (function_exists('is_multisite') && is_multisite() && AIOWPSEC_TBL_GLOBAL_META_DATA == $table_name) {
+			$table_name = $wpdb->prefix.'aiowps_global_meta';
+		} elseif (function_exists('is_multisite') && is_multisite() && AIOWPSEC_TBL_DEBUG_LOG == $table_name) {
+			$table_name = $wpdb->prefix.'aiowps_debug_log';
 		}
 		//offset to make sure UTC timestamp updated
 		$wpdb->query($wpdb->prepare("UPDATE $table_name SET $field_timestamp = (UNIX_TIMESTAMP($field_datetime) - %d)", $offset));
+	}
+
+	/**
+	 * Deletes the aiowps_temp_configs option if present.
+	 *
+	 * @return void
+	 */
+	public static function delete_aiowps_temp_configs_option() {
+		delete_option('aiowps_temp_configs');
 	}
 
 	public static function create_db_backup_dir() {
@@ -366,68 +400,18 @@ class AIOWPSecurity_Installer {
 	}
 
 	/**
-	 * Restores original config settings and .htaccess file rules from before the last deactivation.
-	 *
-	 * @global AIO_WP_Security $aio_wp_security
-	 *
-	 * @return Boolean - whether or not the restoration succeeded
-	 */
-	public static function reactivation_tasks() {
-		global $aio_wp_security;
-
-		$temp_configs = get_option('aiowps_temp_configs');
-
-		if (false !== $temp_configs) {
-			// Case where previously installed plugin is reactivated
-			// Let's copy the original configs back to the options table
-			$updated = update_option('aio_wp_security_configs', $temp_configs);
-
-			if (!$updated) {
-				if (get_option('aio_wp_security_configs') === $temp_configs) {
-					delete_option('aiowps_temp_configs');
-					return true;
-				}
-
-				$aio_wp_security->debug_logger->log_debug('AIOWPSecurity_Installer::reactivation_tasks() - Restoration of original config settings failed.', 4);
-				return false;
-			}
-
-			// Load the restored config settings to the configs object
-			$aio_wp_security->configs->load_config();
-
-			if (is_main_site() && is_super_admin()) {
-				// Now let's write any rules to the .htaccess file if necessary
-				$result = AIOWPSecurity_Utility_Htaccess::write_to_htaccess();
-				AIOWPSecurity_Configure_Settings::reapply_firewall_configs();
-
-				if (!$result) {
-					$aio_wp_security->debug_logger->log_debug('AIOWPSecurity_Installer::reactivation_tasks() - Could not write to the .htaccess file. Please check the file permissions.', 4);
-					return false;
-				}
-			}
-
-			delete_option('aiowps_temp_configs');
-
-			return true;
-		} else {
-			$aio_wp_security->debug_logger->log_debug('AIOWPSecurity_Installer::reactivation_tasks() - Original config settings not found.', 4);
-			return false;
-		}
-	}
-
-	/**
 	 * Setup AIOS cron tasks.
 	 * Handles both single and multi-site (NW activation) cases.
 	 *
 	 * @global type $wpdb
-	 * @param Boolean $networkwide Whether set cronjob networkwide or normal site.
+	 *
 	 * @return Void
 	 */
-	public static function set_cron_tasks_upon_activation($networkwide = false) {
+	public static function set_cron_tasks_upon_activation() {
 		require_once(__DIR__.'/wp-security-cronjob-handler.php');
 		// It is required because we are going to schedule a 15-minute cron event upon activation.
 		add_filter('cron_schedules', array('AIOWPSecurity_Cronjob_Handler', 'cron_schedules'));
-		if (is_multisite() && $networkwide) {
+		if (is_multisite() && is_main_site()) {
 			global $wpdb;
 			// check if it is a network activation
 			$blogids = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");

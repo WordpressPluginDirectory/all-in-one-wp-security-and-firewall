@@ -19,6 +19,17 @@ class AIOWPSecurity_List_Debug_Log extends AIOWPSecurity_List_Table {
 		));
 
 	}
+	
+	/**
+	 * Returns logtime column in datetime format as per user setting time zone.
+	 *
+	 * @param array $item - data for the columns on the current row
+	 *
+	 * @return string - the datetime
+	 */
+	public function column_logtime($item) {
+		return AIOWPSecurity_Utility::convert_timestamp($item['logtime']);
+	}
 
 	/**
 	 * This function renders a default column item
@@ -40,7 +51,7 @@ class AIOWPSecurity_List_Debug_Log extends AIOWPSecurity_List_Table {
 	public function get_columns() {
 		return array(
 			'id' => 'ID',
-			'created' => __('Date and time', 'all-in-one-wp-security-and-firewall'),
+			'logtime' => __('Date and time', 'all-in-one-wp-security-and-firewall'),
 			'level' => __('Level', 'all-in-one-wp-security-and-firewall'),
 			'network_id' => __('Network ID', 'all-in-one-wp-security-and-firewall'),
 			'site_id' => __('Site ID', 'all-in-one-wp-security-and-firewall'),
@@ -56,7 +67,7 @@ class AIOWPSecurity_List_Debug_Log extends AIOWPSecurity_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'created' => array('created', false),
+			'logtime' => array('logtime', false),
 			'level' => array('level', false),
 			'network_id' => array('network_id', false),
 			'site_id' => array('site_id', false),
@@ -104,7 +115,7 @@ class AIOWPSecurity_List_Debug_Log extends AIOWPSecurity_List_Table {
 		isset($_GET["order"]) ? $order = strip_tags($_GET["order"]) : $order = '';
 
 		// By default show the most recent debug log entries.
-		$orderby = !empty($orderby) ? esc_sql($orderby) : 'created';
+		$orderby = !empty($orderby) ? esc_sql($orderby) : 'logtime';
 		$order = !empty($order) ? esc_sql($order) : 'DESC';
 
 		$orderby = AIOWPSecurity_Utility::sanitize_value_by_array($orderby, $sortable);

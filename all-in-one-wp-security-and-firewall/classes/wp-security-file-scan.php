@@ -313,27 +313,6 @@ class AIOWPSecurity_Scan {
 		);
 	}
 
-	public static function get_file_change_data() {
-		global $wpdb, $aio_wp_security;
-		//Let's get the results array from the DB
-		$tbl_name = AIOWPSEC_TBL_GLOBAL_META_DATA;
-		$key = 'file_change_detection';
-		$sql_prep = $wpdb->prepare("SELECT * FROM $tbl_name WHERE meta_key1 = %s", $key);
-		$scan_db_data = $wpdb->get_row($sql_prep, ARRAY_A);
-		if (null === $scan_db_data) {
-			$aio_wp_security->debug_logger->log_debug(__METHOD__ . " - DB query for scan results data from global meta table returned null!", 4);
-			return false;
-		}
-		$scan_results_unserialized = maybe_unserialize($scan_db_data['meta_value5']);
-		if (empty($scan_results_unserialized['files_added']) && empty($scan_results_unserialized['files_removed']) && empty($scan_results_unserialized['files_changed'])) {
-			//No file change detected
-			return false;
-		} else {
-			return $scan_results_unserialized;
-		}
-
-	}
-
 	public static function get_file_change_summary($scan_result) {
 		$scan_summary = "";
 		if (!empty($scan_result['files_added'])) {

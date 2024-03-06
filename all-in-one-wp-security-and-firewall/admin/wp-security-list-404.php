@@ -47,7 +47,7 @@ class AIOWPSecurity_List_404 extends AIOWPSecurity_List_Table {
 		$is_locked = AIOWPSecurity_Utility::check_locked_ip($ip, '404');
 		$delete_url = sprintf('admin.php?page=%s&tab=%s&action=%s&id=%s', AIOWPSEC_BRUTE_FORCE_MENU_SLUG, $tab, 'delete_event_log', $item['id']);
 		//Add nonce to delete URL
-		$delete_url_nonce = wp_nonce_url($delete_url, "delete_404_log", "aiowps_nonce");
+		$delete_url_nonce = wp_nonce_url($delete_url, "404_log_item_action", "aiowps_nonce");
 		if ($is_locked) {
 			//Build row actions
 			$unblock_url_nonce = wp_nonce_url(sprintf('admin.php?page=%s&tab=%s', AIOWPSEC_MAIN_MENU_SLUG, $blocked_ips_tab), "404_log_item_action", "aiowps_nonce");
@@ -150,7 +150,9 @@ class AIOWPSecurity_List_404 extends AIOWPSecurity_List_Table {
 	}
 
 	private function process_bulk_action() {
-		if (empty($_REQUEST['_wpnonce']) || !wp_verify_nonce($_REQUEST['_wpnonce'], 'bulk-items')) return;
+		if (empty($_REQUEST['_wpnonce']) || !isset($_REQUEST['_wp_http_referer'])) return;
+		$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($_REQUEST['_wpnonce'], 'bulk-items');
+		if (is_wp_error($result)) return;
 		
 		if ('bulk_block_ip' === $this->current_action()) {//Process delete bulk actions
 			if (!isset($_REQUEST['item'])) {
@@ -271,29 +273,20 @@ class AIOWPSecurity_List_404 extends AIOWPSecurity_List_Table {
 		global $wpdb, $aio_wp_security;
 		$events_table = AIOWPSEC_TBL_EVENTS;
 		if (is_array($entries)) {
-			if (isset($_REQUEST['_wp_http_referer'])) {
-				//Delete multiple records
-				$entries = array_map('esc_sql', $entries); //escape every array element
-				$entries = array_filter($entries, 'is_numeric'); //discard non-numeric ID values
-				$id_list = "(" . implode(",", $entries) . ")"; //Create comma separate list for DB operation
-				$delete_command = "DELETE FROM " . $events_table . " WHERE id IN " . $id_list;
-				$result = $wpdb->query($delete_command);
-				if ($result) {
-					AIOWPSecurity_Admin_Menu::show_msg_record_deleted_st();
-				} else {
-					// Error on bulk delete
-					$aio_wp_security->debug_logger->log_debug('Database error occurred when deleting rows from Events table. Database error: '.$wpdb->last_error, 4);
-					AIOWPSecurity_Admin_Menu::show_msg_record_not_deleted_st();
-				}
+			//Delete multiple records
+			$entries = array_map('esc_sql', $entries); //escape every array element
+			$entries = array_filter($entries, 'is_numeric'); //discard non-numeric ID values
+			$id_list = "(" . implode(",", $entries) . ")"; //Create comma separate list for DB operation
+			$delete_command = "DELETE FROM " . $events_table . " WHERE id IN " . $id_list;
+			$result = $wpdb->query($delete_command);
+			if ($result) {
+				AIOWPSecurity_Admin_Menu::show_msg_record_deleted_st();
+			} else {
+				// Error on bulk delete
+				$aio_wp_security->debug_logger->log_debug('Database error occurred when deleting rows from Events table. Database error: '.$wpdb->last_error, 4);
+				AIOWPSecurity_Admin_Menu::show_msg_record_not_deleted_st();
 			}
-
 		} elseif (null != $entries) {
-			$nonce = isset($_GET['aiowps_nonce']) ? $_GET['aiowps_nonce'] : '';
-			if (!isset($nonce) || !wp_verify_nonce($nonce, 'delete_404_log')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed for delete selected 404 event logs operation.", 4);
-				die(__('Nonce check failed for delete selected 404 event logs operation.', 'all-in-one-wp-security-and-firewall'));
-			}
-
 			//Delete single record
 			$delete_command = "DELETE FROM " . $events_table . " WHERE id = '" . absint($entries) . "'";
 			//$delete_command = $wpdb->prepare("DELETE FROM $events_table WHERE id = %s", absint($entries));

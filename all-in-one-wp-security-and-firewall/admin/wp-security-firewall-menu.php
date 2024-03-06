@@ -46,11 +46,6 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 				'render_callback' => array($this, 'render_internet_bots'),
 				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
 			),
-			'404-detection' => array(
-				'title' => __('404 detection', 'all-in-one-wp-security-and-firewall'),
-				'render_callback' => array($this, 'render_404_detection'),
-				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
-			),
 			'blacklist' => array(
 				'title' => __('Blacklist', 'all-in-one-wp-security-and-firewall'),
 				'render_callback' => array($this, 'render_blacklist'),
@@ -127,12 +122,9 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 			// Max file upload size in basic rules
 			$upload_size = absint($_POST['aiowps_max_file_upload_size']);
 
-			$max_allowed = apply_filters('aiowps_max_allowed_upload_config', 250); // Set a filterable limit of 250MB
-			$max_allowed = absint($max_allowed);
-
-			if ($upload_size > $max_allowed) {
-				$upload_size = $max_allowed;
-			} elseif (empty($upload_size)) {
+			$upload_size = apply_filters('aiowps_max_allowed_upload_config', $upload_size); // Set a filterable limit
+			
+			if (empty($upload_size)) {
 				$upload_size = AIOS_FIREWALL_MAX_FILE_UPLOAD_LIMIT_MB;
 			}
 
@@ -343,17 +335,6 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 		}
 
 		$aio_wp_security->include_template('wp-admin/firewall/internet-bots.php');
-	}
-
-	/**
-	 * Renders the 404 Detection tab
-	 *
-	 * @return void
-	 */
-	protected function render_404_detection() {
-		global $aio_wp_security;
-
-		$aio_wp_security->include_template('wp-admin/general/moved.php', false, array('key' => '404_detection'));
 	}
 
 	/**

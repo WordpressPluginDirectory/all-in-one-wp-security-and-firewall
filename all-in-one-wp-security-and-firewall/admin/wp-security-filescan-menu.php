@@ -53,7 +53,7 @@ class AIOWPSecurity_Filescan_Menu extends AIOWPSecurity_Admin_Menu {
 	 * @global $aiowps_feature_mgr
 	 */
 	protected function render_file_change_detect() {
-		global $wpdb, $aio_wp_security, $aiowps_feature_mgr;
+		global $aio_wp_security, $aiowps_feature_mgr;
 
 		$fcd_data = AIOWPSecurity_Scan::get_fcd_data();
 		$previous_scan = isset($fcd_data['last_scan_result']);
@@ -129,10 +129,6 @@ class AIOWPSecurity_Filescan_Menu extends AIOWPSecurity_Admin_Menu {
 			}
 			
 			if ($reset_scan_data) {
-				// Clear old scan row and ask user to perform a fresh scan to reset the data
-				$aiowps_global_meta_tbl_name = AIOWPSEC_TBL_GLOBAL_META_DATA;
-				$where = array('meta_key1' => 'file_change_detection', 'meta_value1' => 'file_scan_data');
-				$wpdb->delete($aiowps_global_meta_tbl_name, $where);
 				$aio_wp_security->scan_obj->execute_file_change_detection_scan();
 				$new_scan_alert = __('New scan completed: The plugin has detected that you have made changes to the "File Types To Ignore" or "Files To Ignore" fields.', 'all-in-one-wp-security-and-firewall').' '.__('In order to ensure that future scan results are accurate, the old scan data has been refreshed.', 'all-in-one-wp-security-and-firewall');
 				$this->show_msg_updated($new_scan_alert);

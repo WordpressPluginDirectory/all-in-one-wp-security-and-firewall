@@ -164,9 +164,16 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 			$this->show_msg_updated($info_msg_string);
 		}
 
-		if (isset($_REQUEST['action'])) { // Do list table form row action tasks
-			if ('block_spammer_ip' == $_REQUEST['action']) { //The "block" link was clicked for a row in the list table
-				$spammer_ip_list->block_spammer_ip_records(strip_tags($_REQUEST['spammer_ip']));
+		if (isset($_GET['action'])) { // Do list table form row action tasks
+			$nonce = isset($_GET['aiowps_nonce']) ? $_GET['aiowps_nonce'] : '';
+			$nonce_user_cap_result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($nonce, 'block_spammer_ip');
+			
+			if (is_wp_error($nonce_user_cap_result)) {
+				$aio_wp_security->debug_logger->log_debug($nonce_user_cap_result->get_error_message(), 4);
+				die($nonce_user_cap_result->get_error_message());
+			}
+			if ('block_spammer_ip' == $_GET['action']) { //The "block" link was clicked for a row in the list table
+				$spammer_ip_list->block_spammer_ip_records(strip_tags($_GET['spammer_ip']));
 			}
 		}
 
@@ -183,9 +190,8 @@ class AIOWPSecurity_Spam_Menu extends AIOWPSecurity_Admin_Menu {
 				$total_count = count($total_res);
 				$todays_blocked_count = 0;
 				foreach ($total_res as $blocked_item) {
-					$now = current_time('mysql');
-					$now_date_time = new DateTime($now);
-					$blocked_date = new DateTime($blocked_item->blocked_date);
+					$now_date_time = new DateTime('now', new DateTimeZone('UTC'));
+					$blocked_date = new DateTime('@'.$blocked_item->created); //@ with timestamp creates correct DateTime
 					if ($blocked_date->format('Y-m-d') == $now_date_time->format('Y-m-d')) {
 						//there was an IP added to permanent block list today
 						++$todays_blocked_count;

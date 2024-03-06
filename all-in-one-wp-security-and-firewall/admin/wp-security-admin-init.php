@@ -116,21 +116,12 @@ class AIOWPSecurity_Admin_Init {
 				'order' => 60,
 			),
 			array(
-				'page_title' => __('Blacklist Manager', 'all-in-one-wp-security-and-firewall'),
-				'menu_title' => __('Blacklist Manager', 'all-in-one-wp-security-and-firewall'),
-				'menu_slug' => AIOWPSEC_BLACKLIST_MENU_SLUG,
-				'render_callback' => array($this, 'handle_blacklist_menu_rendering'),
-				'icon' => 'blacklist_manager',
-				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
-				'order' => 70,
-			),
-			array(
 				'page_title' => __('Firewall', 'all-in-one-wp-security-and-firewall'),
 				'menu_title' => __('Firewall', 'all-in-one-wp-security-and-firewall'),
 				'menu_slug' => AIOWPSEC_FIREWALL_MENU_SLUG,
 				'render_callback' => array($this, 'handle_firewall_menu_rendering'),
 				'icon' => 'firewall',
-				'order' => 80,
+				'order' => 70,
 			),
 			array(
 				'page_title' => __('Brute Force', 'all-in-one-wp-security-and-firewall'),
@@ -138,7 +129,7 @@ class AIOWPSecurity_Admin_Init {
 				'menu_slug' => AIOWPSEC_BRUTE_FORCE_MENU_SLUG,
 				'render_callback' => array($this, 'handle_brute_force_menu_rendering'),
 				'icon' => 'brute_force',
-				'order' => 90,
+				'order' => 80,
 			),
 			array(
 				'page_title' => __('Spam Prevention', 'all-in-one-wp-security-and-firewall'),
@@ -146,7 +137,7 @@ class AIOWPSecurity_Admin_Init {
 				'menu_slug' => AIOWPSEC_SPAM_MENU_SLUG,
 				'render_callback' => array($this, 'handle_spam_menu_rendering'),
 				'icon' => 'spam_prevention',
-				'order' => 100,
+				'order' => 90,
 			),
 			array(
 				'page_title' => __('Scanner', 'all-in-one-wp-security-and-firewall'),
@@ -155,15 +146,7 @@ class AIOWPSecurity_Admin_Init {
 				'render_callback' => array($this, 'handle_filescan_menu_rendering'),
 				'icon' => 'scanner',
 				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
-				'order' => 110,
-			),
-			array(
-				'page_title' => __('Miscellaneous', 'all-in-one-wp-security-and-firewall'),
-				'menu_title' => __('Miscellaneous', 'all-in-one-wp-security-and-firewall'),
-				'menu_slug' => AIOWPSEC_MISC_MENU_SLUG,
-				'render_callback' => array($this, 'handle_misc_menu_rendering'),
-				'icon' => 'miscellaneous',
-				'order' => 120,
+				'order' => 100,
 			),
 			array(
 				'page_title' => __('Tools', 'all-in-one-wp-security-and-firewall'),
@@ -171,7 +154,7 @@ class AIOWPSecurity_Admin_Init {
 				'menu_slug' => AIOWPSEC_TOOLS_MENU_SLUG,
 				'render_callback' => array($this, 'handle_tools_menu_rendering'),
 				'icon' => 'tools',
-				'order' => 130,
+				'order' => 110,
 			),
 		);
 		$menu_items = apply_filters('aiowpsecurity_menu_items', $menu_items);
@@ -210,7 +193,7 @@ class AIOWPSecurity_Admin_Init {
 
 			foreach ($export_keys as $key => $value) {
 				if (isset($item[$key])) {
-					$csv_line[] = $item[$key];
+					$csv_line[] = ('created' == $key) ? AIOWPSecurity_Utility::convert_timestamp($item[$key]) : $item[$key];
 				}
 			}
 			fputcsv($output, $csv_line);
@@ -434,11 +417,12 @@ class AIOWPSecurity_Admin_Init {
 	 * @return string
 	 */
 	public function display_footer_review_message() {
-		/* translators: 1: All In One WP Security & Firewall 2: G2 review link */
 		$message = sprintf(
-			__('Enjoyed %1$s? Please leave us a %2$s rating.', 'all-in-one-wp-security-and-firewall') .' '. __('We really appreciate your support!', 'all-in-one-wp-security-and-firewall'),
+			__('Enjoyed %s? Please leave us a %s rating on %s or %s', 'all-in-one-wp-security-and-firewall').' '.__('We really appreciate your support!', 'all-in-one-wp-security-and-firewall'),
 			'<b>' . htmlspecialchars('All In One WP Security & Firewall') . '</b>',
-			'<a href="https://www.g2.com/products/all-in-one-wp-security-firewall/reviews" target="_blank">&starf;&starf;&starf;&starf;&starf;</a>'
+			'<span style="color:#2271b1">&starf;&starf;&starf;&starf;&starf;</span>',
+			'<a href="https://uk.trustpilot.com/review/aiosplugin.com" target="_blank">Trustpilot</a>',
+			'<a href="https://www.g2.com/products/all-in-one-wp-security-firewall/reviews" target="_blank">G2.com</a>'
 		);
 		return $message;
 	}
@@ -535,7 +519,7 @@ class AIOWPSecurity_Admin_Init {
 			if (is_main_site() && is_super_admin()) {
 				$config_data['firewall'] = $aiowps_firewall_config->get_contents();
 
-				if (!empty($simba_two_factor_authentication->is_tfa_integrated)) {
+				if (true == $simba_two_factor_authentication->is_tfa_integrated) {
 					$config_data['tfa'] = $simba_two_factor_authentication->get_configs();
 				}
 			}

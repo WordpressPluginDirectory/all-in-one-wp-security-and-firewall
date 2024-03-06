@@ -176,9 +176,9 @@ class AIOWPSecurity_Brute_Force_Menu extends AIOWPSecurity_Admin_Menu {
 
 					$msg = '<p>' . __('You have successfully enabled the cookie based brute force prevention feature', 'all-in-one-wp-security-and-firewall') . '</p>';
 					$msg .= '<p>' . __('From now on you will need to log into your WP Admin using the following URL:', 'all-in-one-wp-security-and-firewall') . '</p>';
-					$msg .= '<p><strong>'.AIOWPSEC_WP_URL.'/?'.$brute_force_feature_secret_word.'=1</strong></p>';
+					$msg .= '<p><strong>'.AIOWPSEC_WP_URL.'/?'.esc_html($brute_force_feature_secret_word).'=1</strong></p>';
 					$msg .= '<p>' . __('It is important that you save this URL value somewhere in case you forget it, OR,', 'all-in-one-wp-security-and-firewall') . '</p>';
-					$msg .= '<p>' . sprintf(__('simply remember to add a "?%s=1" to your current site URL address.', 'all-in-one-wp-security-and-firewall'), $brute_force_feature_secret_word) . '</p>';
+					$msg .= '<p>' . sprintf(__('simply remember to add a "?%s=1" to your current site URL address.', 'all-in-one-wp-security-and-firewall'), esc_html($brute_force_feature_secret_word)) . '</p>';
 				}
 			} else {
 				$aio_wp_security->configs->set_value('aiowps_enable_brute_force_attack_prevention', '');
@@ -439,23 +439,19 @@ class AIOWPSecurity_Brute_Force_Menu extends AIOWPSecurity_Admin_Menu {
 
 
 		if (isset($_GET['action'])) { // Do list table form row action tasks
-			if ('temp_block' == $_GET['action']) { // Temp Block link was clicked for a row in list table
-				$nonce_user_cap_result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($_GET['aiowps_nonce'], '404_log_item_action');
+			$nonce = isset($_GET['aiowps_nonce']) ? $_GET['aiowps_nonce'] : '';
+			$nonce_user_cap_result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($nonce, '404_log_item_action');
+			
+			if (is_wp_error($nonce_user_cap_result)) {
+				$aio_wp_security->debug_logger->log_debug($nonce_user_cap_result->get_error_message(), 4);
+				die($nonce_user_cap_result->get_error_message());
+			}
 
-				if (is_wp_error($nonce_user_cap_result)) {
-					$aio_wp_security->debug_logger->log_debug($nonce_user_cap_result->get_error_message(), 4);
-					die($nonce_user_cap_result->get_error_message());
-				}
+			if ('temp_block' == $_GET['action']) { // Temp Block link was clicked for a row in list table
 				$event_list_404->block_ip(strip_tags($_GET['ip_address']));
 			}
 
 			if ('blacklist_ip' == $_GET['action']) { //Blacklist IP link was clicked for a row in list table
-				$nonce_user_cap_result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($_GET['aiowps_nonce'], '404_log_item_action');
-
-				if (is_wp_error($nonce_user_cap_result)) {
-					$aio_wp_security->debug_logger->log_debug($nonce_user_cap_result->get_error_message(), 4);
-					die($nonce_user_cap_result->get_error_message());
-				}
 				$event_list_404->blacklist_ip_address(strip_tags($_GET['ip_address']));
 			}
 

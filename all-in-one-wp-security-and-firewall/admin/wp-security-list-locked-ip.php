@@ -99,9 +99,14 @@ class AIOWPSecurity_List_Locked_IP extends AIOWPSecurity_List_Table {
 		if (empty($item['ip_lookup_result'])) return __('There is no IP lookup result available.', 'all-in-one-wp-security-and-firewall');
 		
 		$ip_lookup_result = json_decode($item['ip_lookup_result'], true);
+
+		// check that the json decode worked
+		if (null === $ip_lookup_result) return __('There is no IP lookup result available.', 'all-in-one-wp-security-and-firewall');
+
 		foreach ($ip_lookup_result as $key => $value) {
 			$ip_lookup_result[$key] = empty($value) ? __('Not Found', 'all-in-one-wp-security-and-firewall') : $value;
 		}
+
 		$ip_lookup_result = print_r($ip_lookup_result, true);
 
 		$output = sprintf('<a href="#TB_inline?&inlineId=trace-%s" title="%s" class="thickbox">%s</a>', esc_attr($item['id']), esc_html__('IP lookup result', 'all-in-one-wp-security-and-firewall'), esc_html__('Show result', 'all-in-one-wp-security-and-firewall'));

@@ -37,7 +37,7 @@
 		// Fetch, prepare, sort, and filter our data...
 		$user_list->prepare_items();
 		?>
-		<form id="tables-filter" method="get">
+		<form id="tables-filter" method="post">
 			<!-- For plugins, we also need to ensure that the form posts back to our current page -->
 			<input type="hidden" name="page" value="<?php echo esc_attr($page); ?>" />
 			<?php
