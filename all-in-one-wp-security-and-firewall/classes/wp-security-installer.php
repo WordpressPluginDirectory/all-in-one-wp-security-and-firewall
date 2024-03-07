@@ -9,9 +9,6 @@ class AIOWPSecurity_Installer {
 		'2.0.2' => array(
 			'clean_audit_log_stacktraces',
 		),
-		'2.0.8' => array(
-			'update_event_table_column_to_timestamp',
-		),
 		'2.0.9' => array(
 			'update_table_column_to_timestamp',
 		),
@@ -344,7 +341,7 @@ class AIOWPSecurity_Installer {
 		$offset = $wpdb->get_var("SELECT TIMESTAMPDIFF(SECOND, NOW(), UTC_TIMESTAMP())");
 		if (AIOWPSEC_TBL_PERM_BLOCK == $table_name || AIOWPSEC_TBL_GLOBAL_META_DATA == $table_name || AIOWPSEC_TBL_DEBUG_LOG == $table_name) {
 			//User local settings date time saved offset timezone needs to removed for UTC correct value
-			$offset += wp_timezone()->getOffset(new DateTime('now', new DateTimeZone('UTC')));
+			$offset += AIOWPSecurity_Utility::get_wp_timezone()->getOffset(new DateTime('now', new DateTimeZone('UTC')));
 		}
 		if (function_exists('is_multisite') && is_multisite() && AIOWPSEC_TBL_EVENTS == $table_name) {
 			$table_name = $wpdb->prefix.'aiowps_events';
