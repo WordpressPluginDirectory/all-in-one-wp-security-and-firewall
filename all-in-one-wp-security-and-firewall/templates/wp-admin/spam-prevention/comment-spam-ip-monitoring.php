@@ -28,7 +28,7 @@
 					<th scope="row"><?php _e('Enable auto block of spam comment IPs', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this box if you want this plugin to automatically block IP addresses which submit spam comments.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_autoblock_spam_ip', '1' == $aio_wp_security->configs->get_value('aiowps_enable_autoblock_spam_ip')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want this plugin to automatically block IP addresses which submit spam comments.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_autoblock_spam_ip', '1' == $aio_wp_security->configs->get_value('aiowps_enable_autoblock_spam_ip')); ?>
 						</div>
 					</td>
 				</tr>

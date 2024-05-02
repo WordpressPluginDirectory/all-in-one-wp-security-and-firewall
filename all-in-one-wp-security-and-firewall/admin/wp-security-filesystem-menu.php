@@ -63,8 +63,7 @@ class AIOWPSecurity_Filesystem_Menu extends AIOWPSecurity_Admin_Menu {
 		// if this is the case there is no need to display a "fix permissions" button
 		global $aio_wp_security, $aiowps_feature_mgr;
 		
-		$util = new AIOWPSecurity_Utility_File;
-		$files_dirs_to_check = $util->files_and_dirs_to_check;
+		$files_dirs_to_check = AIOWPSecurity_Utility_File::get_files_and_dirs_to_check();
 
 		if (isset($_POST['aiowps_fix_permissions'])) {
 			$nonce = $_REQUEST['_wpnonce'];

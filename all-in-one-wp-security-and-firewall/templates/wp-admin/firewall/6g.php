@@ -25,7 +25,7 @@
 				<th scope="row"><?php _e('Enable 6G firewall protection', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 				<td>
 					<div class="aiowps_switch_container">
-						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to apply the recommended 6G firewall protection.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_6g_firewall', '1' == $aio_wp_security->configs->get_value('aiowps_enable_6g_firewall')); ?>
+						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this to apply the recommended 6G firewall protection.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_6g_firewall', '1' == $aio_wp_security->configs->get_value('aiowps_enable_6g_firewall')); ?>
 						<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
 						<div class="aiowps_more_info_body">
 								<?php
@@ -66,7 +66,7 @@
 				<th scope="row"><?php _e('Enable legacy 5G firewall protection', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 				<td>
 					<div class="aiowps_switch_container">
-						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to apply the 5G firewall protection from perishablepress.com to your site.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_5g_firewall', '1' == $aio_wp_security->configs->get_value('aiowps_enable_5g_firewall')); ?>
+						<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this to apply the 5G firewall protection from perishablepress.com to your site.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_5g_firewall', '1' == $aio_wp_security->configs->get_value('aiowps_enable_5g_firewall')); ?>
 						<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
 						<div class="aiowps_more_info_body">
 								<?php

@@ -22,7 +22,7 @@
 					<th scope="row"><?php _e('Enable login lockout feature', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to enable the login lockout feature and apply the settings below', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_login_lockdown', '1' == $aio_wp_security->configs->get_value('aiowps_enable_login_lockdown')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this to turn on the login lockout feature', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_login_lockdown', '1' == $aio_wp_security->configs->get_value('aiowps_enable_login_lockdown')); ?>
 						</div>
 					</td>
 				</tr>
@@ -30,7 +30,7 @@
 					<th scope="row"><?php _e('Allow unlock requests', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to allow users to generate an automated unlock request link which will unlock their account', 'all-in-one-wp-security-and-firewall'), 'aiowps_allow_unlock_requests', '1' == $aio_wp_security->configs->get_value('aiowps_allow_unlock_requests')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want to allow users to generate an automated unlock request link which will unlock their account', 'all-in-one-wp-security-and-firewall'), 'aiowps_allow_unlock_requests', '1' == $aio_wp_security->configs->get_value('aiowps_allow_unlock_requests')); ?>
 						</div>
 					</td>
 				</tr>
@@ -74,7 +74,7 @@
 					<th scope="row"><?php _e('Display generic error message', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to show a generic error message when a login attempt fails', 'all-in-one-wp-security-and-firewall'), 'aiowps_set_generic_login_msg', '1' == $aio_wp_security->configs->get_value('aiowps_set_generic_login_msg')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want to show a generic error message when a login attempt fails', 'all-in-one-wp-security-and-firewall'), 'aiowps_set_generic_login_msg', '1' == $aio_wp_security->configs->get_value('aiowps_set_generic_login_msg')); ?>
 						</div>
 					</td>
 				</tr>
@@ -82,7 +82,7 @@
 					<th scope="row"><?php _e('Instantly lockout invalid usernames', 'all-in-one-wp-security-and-firewall'); ?>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to instantly lockout login attempts with usernames which do not exist on your system', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_invalid_username_lockdown', '1' == $aio_wp_security->configs->get_value('aiowps_enable_invalid_username_lockdown')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want to instantly lockout login attempts with usernames which do not exist on your system', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_invalid_username_lockdown', '1' == $aio_wp_security->configs->get_value('aiowps_enable_invalid_username_lockdown')); ?>
 						</div>
 					</td>
 				</tr>
@@ -107,7 +107,7 @@
 					</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to receive an email when someone has been locked out due to maximum failed login attempts', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_email_notify', '1' == $aio_wp_security->configs->get_value('aiowps_enable_email_notify')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want to receive an email when someone has been locked out due to maximum failed login attempts', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_email_notify', '1' == $aio_wp_security->configs->get_value('aiowps_enable_email_notify')); ?>
 						</div>
 						<br />
 						<textarea id="aiowps_email_address" name="aiowps_email_address" cols="50" rows="5"><?php echo esc_textarea(AIOWPSecurity_Utility::get_textarea_str_val($aio_wp_security->configs->get_value('aiowps_email_address'))); ?></textarea><br>
@@ -129,7 +129,7 @@
 					</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to include the PHP backtrace in notification emails.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_php_backtrace_in_email', '1' == $aio_wp_security->configs->get_value('aiowps_enable_php_backtrace_in_email')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want to include the PHP backtrace in notification emails.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_php_backtrace_in_email', '1' == $aio_wp_security->configs->get_value('aiowps_enable_php_backtrace_in_email')); ?>
 						</div>
 					</td>
 				</tr>
@@ -165,7 +165,7 @@
 					<th scope="row"><label for="aiowps_lockdown_enable_whitelisting"><?php _e('Enable login lockout IP whitelist', 'all-in-one-wp-security-and-firewall'); ?></label>:</th>
 					<td>
 						<div class="aiowps_switch_container">
-							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this if you want to enable the whitelisting of selected IP addresses specified in the settings below', 'all-in-one-wp-security-and-firewall'), 'aiowps_lockdown_enable_whitelisting', '1' == $aio_wp_security->configs->get_value('aiowps_lockdown_enable_whitelisting')); ?>
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want the whitelisting of selected IP addresses specified in the settings below', 'all-in-one-wp-security-and-firewall'), 'aiowps_lockdown_enable_whitelisting', '1' == $aio_wp_security->configs->get_value('aiowps_lockdown_enable_whitelisting')); ?>
 						</div>
 					</td>
 				</tr>

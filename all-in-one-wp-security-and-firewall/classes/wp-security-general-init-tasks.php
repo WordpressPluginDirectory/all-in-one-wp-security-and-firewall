@@ -83,7 +83,7 @@ class AIOWPSecurity_General_Init_Tasks {
 				AIOWPSecurity_Utility_IP::check_login_whitelist_and_forbid();
 
 				// If URL contains secret word in query param then set cookie and then redirect to the login page
-				AIOWPSecurity_Utility::set_cookie_value(AIOWPSecurity_Utility::get_brute_force_secret_cookie_name(), wp_hash($bfcf_secret_word));
+				AIOWPSecurity_Utility::set_cookie_value(AIOWPSecurity_Utility::get_brute_force_secret_cookie_name(), AIOS_Helper::get_hash($bfcf_secret_word));
 				if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_rename_login_page') && !is_user_logged_in()) {
 					$login_url = home_url((get_option('permalink_structure') ? '' : '?')  . $aio_wp_security->configs->get_value('aiowps_login_page_slug'));
 					AIOWPSecurity_Utility::redirect_to_url($login_url);
@@ -273,13 +273,6 @@ class AIOWPSecurity_General_Init_Tasks {
 		if ($aio_wp_security->configs->get_value('aiowps_enable_bp_register_captcha') == '1') {
 			add_action('bp_account_details_fields', array($aio_wp_security->captcha_obj, 'insert_captcha_question_form'));
 			add_action('bp_signup_validate', array($this, 'buddy_press_signup_validate_captcha'));
-		}
-
-
-		// For block fake Googlebots feature
-		if ($aio_wp_security->configs->get_value('aiowps_block_fake_googlebots') == '1') {
-			include_once(AIO_WP_SECURITY_PATH.'/classes/wp-security-bot-protection.php');
-			AIOWPSecurity_Fake_Bot_Protection::block_fake_googlebots();
 		}
 
 		// For 404 event logging

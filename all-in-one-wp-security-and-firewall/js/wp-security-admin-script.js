@@ -169,6 +169,20 @@ function aios_parse_json(json_mix_str, analyse) {
 
 }
 
+/**
+ * Updates the content of an HTML element identified by its ID with the provided badge text.
+ *
+ * @param {Array} badges - An array of objects representing badges to update.
+ * @param {string} badges.id - The ID of the HTML element to update.
+ * @param {string} badges.html - The HTML content to set for the element.
+ * @returns {void}
+ */
+function aios_update_badge(badges) {
+	badges.forEach(function(badge) {
+		jQuery(badge.id).html(badge.html);
+	});
+}
+
 jQuery(function($) {
 	//Add Generic Admin Dashboard JS Code in this file
 

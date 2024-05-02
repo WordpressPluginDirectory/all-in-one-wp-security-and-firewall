@@ -605,12 +605,11 @@ class AIOWPSecurity_Feature_Item_Manager {
 	 * @return void
 	 */
 	private function is_feature_enabled($item) {
-		global $aio_wp_security;
-		global $aiowps_firewall_config;
-		
+		global $aio_wp_security, $aiowps_firewall_config;
+
 		$enabled = false;
 		foreach ($item->feature_options as $option) {
-			if ('1' == $aiowps_firewall_config->get_value($option) || $aio_wp_security->configs->get_value($option) == '1') $enabled = true;
+			if ('1' == $aiowps_firewall_config->get_value($option) || '1' == $aio_wp_security->configs->get_value($option)) $enabled = true;
 		}
 
 		if ($enabled) {
@@ -676,8 +675,7 @@ class AIOWPSecurity_Feature_Item_Manager {
 	private function check_filesystem_permissions_feature($item) {
 		//TODO
 		$is_secure = 1;
-		$util = new AIOWPSecurity_Utility_File;
-		$files_dirs_to_check = $util->files_and_dirs_to_check;
+		$files_dirs_to_check = AIOWPSecurity_Utility_File::get_files_and_dirs_to_check();
 
 		foreach ($files_dirs_to_check as $file_or_dir) {
 			$actual_perm = AIOWPSecurity_Utility_File::get_file_permission($file_or_dir['path']);

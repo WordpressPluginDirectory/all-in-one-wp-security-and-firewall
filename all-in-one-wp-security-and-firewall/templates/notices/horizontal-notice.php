@@ -74,6 +74,8 @@
 							_e('Sign up', 'all-in-one-wp-security-and-firewall');
 						} elseif ('go_there' == $button_meta) {
 							_e('Go there', 'all-in-one-wp-security-and-firewall');
+						} elseif ('learn_more' == $button_meta) {
+							_e('Learn more', 'all-in-one-wp-security-and-firewall');
 						} else {
 							_e('Read more', 'all-in-one-wp-security-and-firewall');
 						}

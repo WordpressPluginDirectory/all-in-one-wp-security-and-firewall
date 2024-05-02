@@ -47,7 +47,7 @@ class AIOWPSecurity_Admin_Init {
 		
 		if (AIOWPSecurity_Utility_Permissions::has_manage_cap()) {
 			$this->admin_includes();
-			$this->setup_menu_items();
+			add_action('admin_menu', array($this, 'setup_menu_items'));
 			add_action('admin_menu', array($this, 'create_admin_menus'));
 			add_action('admin_menu', array($this, 'premium_upgrade_submenu'), 40);
 			add_action('admin_init', array($this, 'aiowps_csv_download'));
@@ -72,7 +72,7 @@ class AIOWPSecurity_Admin_Init {
 	 *
 	 * @return void
 	 */
-	private function setup_menu_items() {
+	public function setup_menu_items() {
 		$menu_items = array(
 			array(
 				'page_title' => __('Dashboard', 'all-in-one-wp-security-and-firewall'),
@@ -477,7 +477,7 @@ class AIOWPSecurity_Admin_Init {
 				if (empty($brute_force_feature_secret_word)) {
 					$brute_force_feature_secret_word = AIOS_DEFAULT_BRUTE_FORCE_FEATURE_SECRET_WORD;
 				}
-				AIOWPSecurity_Utility::set_cookie_value(AIOWPSecurity_Utility::get_brute_force_secret_cookie_name(), wp_hash($brute_force_feature_secret_word));
+				AIOWPSecurity_Utility::set_cookie_value(AIOWPSecurity_Utility::get_brute_force_secret_cookie_name(), AIOS_Helper::get_hash($brute_force_feature_secret_word));
 			}
 
 			if (isset($_REQUEST['aiowps_cookie_test'])) {

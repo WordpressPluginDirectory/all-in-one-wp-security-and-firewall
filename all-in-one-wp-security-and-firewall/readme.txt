@@ -4,8 +4,8 @@ Donate link: https://david.dw-perspective.org.uk/donate
 Tags: security, malware scanning, two factor authentication, firewall, login security
 Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 6.4
-Stable tag: 5.2.9
+Tested up to: 6.5
+Stable tag: 5.3.0
 License: GPLv3 or later
 
 Protect your website investment with All-In-One Security (AIOS) – a comprehensive and easy to use security plugin designed especially for WordPress. Featuring login security tools, a cutting-edge firewall and much more.
@@ -211,6 +211,29 @@ Go to the settings menu after you activate the plugin and follow the instruction
 1. Features list.
 
 == Changelog ==
+
+= 5.3.0 - 01/May/2024 =
+
+* FEATURE: Added bulk force logout features for logged in users
+* FIX: An issue with the WooCommerce my account page logout function when the cookie based brute force feature is turned on
+* FIX: Warning undefined array key SCRIPT_FILENAME
+* FIX: Custom redirection after login not working if url contains the redirect_to parameter
+* FIX: List of administrator accounts not showing on the user security page
+* FIX: Issue with cookie based bruteforce prevention solved if salt postfix feature is on.
+* FIX: Fixed country field not showing in the 404 event logs (Premium)
+* FIX: Fixed country field not showing in the smart 404 blocked IP log (Premium)
+* TWEAK: Fixed translation issue not showing as per admin user set language instead of site settings
+* TWEAK: Firewall upgrade changes are applied without access to the admin interface
+* TWEAK: Change the labels for the switches to a more appropriate wording
+* TWEAK: In the file scanner results show the file sizes in a human readable format
+* TWEAK: Updated the default message for attempts to access wp-admin
+* TWEAK: Internal refactor of the update code to improve code clarity.
+* TWEAK: Port the 'Block fake Googlebots' feature to the PHP-based firewall
+* TWEAK: Remove requirement for at least one IP for 'Blacklist', 'Login whitelist' and 'Login lockout IP whitelist' to be enabled.
+* TWEAK: Added error message when a user tries to block their own IP on registration approval
+* TWEAK: Added method to update badge on AJAX call
+* TWEAK: internal refactor of the AIOWPSecurity_Utility_File class to improve code clarity
+* TWEAK: Seasonal notice content update for 2024
 
 = 5.2.9 - 06/Mar/2024 =
 
@@ -1406,4 +1429,4 @@ those who want to enable the basic firewall but do not have "AllowOverride" opti
 - First commit to the WP repository.
 
 == Upgrade Notice ==
-* 5.2.8: Fixes a conflict with the Duo authentication plugin. Various tweaks, fixes and improvements. See changelog for full details. A recommended update for all.
+* 5.3.0: Fixes an issue with the cookie based brute force feature and the WooCommerce plugin. Various tweaks, fixes and improvements. See changelog for full details. A recommended update for all.

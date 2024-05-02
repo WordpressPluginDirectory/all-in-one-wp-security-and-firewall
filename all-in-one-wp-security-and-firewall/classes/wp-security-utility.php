@@ -419,7 +419,9 @@ class AIOWPSecurity_Utility {
 
 		$data = apply_filters('aiowps_filter_event_logger_data', $data);
 		//log to database
-		$sql = $wpdb->prepare("INSERT INTO ".$events_table_name." (event_type, username, user_id, event_date, ip_or_host, referer_info, url, event_data, created) VALUES (%s, %s, %d, %s, %s, %s, %s, %s, UNIX_TIMESTAMP())", $data['event_type'], $data['username'], $data['user_id'], $data['event_date'], $data['ip_or_host'], $data['referer_info'], $data['url'], $data['event_data']);
+		$country_code = isset($data['country_code']) ? $data['country_code'] : '';
+		$sql = $wpdb->prepare("INSERT INTO ".$events_table_name." (event_type, username, user_id, event_date, ip_or_host, referer_info, url, event_data, country_code, created) VALUES (%s, %s, %d, %s, %s, %s, %s, %s, %s, UNIX_TIMESTAMP())", $data['event_type'], $data['username'], $data['user_id'], $data['event_date'], $data['ip_or_host'], $data['referer_info'], $data['url'], $data['event_data'], $country_code);
+
 		$result = $wpdb->query($sql);
 		if (false === $result) {
 			$aio_wp_security->debug_logger->log_debug("event_logger: Error inserting record into " . $events_table_name, 4);//Log the highly unlikely event of DB error
@@ -1196,4 +1198,24 @@ class AIOWPSecurity_Utility {
 			}
 		}
 	}
+
+	/**
+	 * Convert a number of bytes into a suitable textual string
+	 *
+	 * @param Integer $size - the number of bytes
+	 *
+	 * @return String - the resulting textual string
+	 */
+	public static function convert_numeric_size_to_text($size) {
+		if ($size > 1073741824) {
+			return round($size / 1073741824, 1).' GB';
+		} elseif ($size > 1048576) {
+			return round($size / 1048576, 1).' MB';
+		} elseif ($size > 1024) {
+			return round($size / 1024, 1).' KB';
+		} else {
+			return round($size, 1).' B';
+		}
+	}
+
 }

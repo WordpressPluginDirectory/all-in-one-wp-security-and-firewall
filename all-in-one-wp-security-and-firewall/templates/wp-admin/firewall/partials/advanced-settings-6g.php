@@ -36,7 +36,7 @@
 			<th><?php _e('Block query strings', 'all-in-one-wp-security-and-firewall');?>:</th>
 			<td>
 				<div class="aiowps_switch_container">
-					<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this to block all query strings recommended by 6G', 'all-in-one-wp-security-and-firewall'), 'aiowps_block_query', $blocked_query); ?>
+					<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this to block all query strings recommended by 6G', 'all-in-one-wp-security-and-firewall'), 'aiowps_block_query', $blocked_query); ?>
 				</div>
 			</td>
 		</tr>
@@ -44,7 +44,7 @@
 			<th><?php _e('Block request strings', 'all-in-one-wp-security-and-firewall');?>:</th>
 			<td>
 				<div class="aiowps_switch_container">
-					<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this to block all request strings recommended by 6G', 'all-in-one-wp-security-and-firewall'), 'aiowps_block_request', $blocked_request); ?>
+					<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this to block all request strings recommended by 6G', 'all-in-one-wp-security-and-firewall'), 'aiowps_block_request', $blocked_request); ?>
 				</div>
 			</td>
 		</tr>
@@ -52,7 +52,7 @@
 			<th><?php _e('Block referers', 'all-in-one-wp-security-and-firewall');?>:</th>
 			<td>
 				<div class="aiowps_switch_container">
-					<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this to block all referers recommended by 6G', 'all-in-one-wp-security-and-firewall'), 'aiowps_block_refs', $blocked_referrers); ?>
+					<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this to block all referers recommended by 6G', 'all-in-one-wp-security-and-firewall'), 'aiowps_block_refs', $blocked_referrers); ?>
 				</div>
 			</td>
 		</tr>
@@ -60,7 +60,7 @@
 			<th><?php _e('Block user-agents', 'all-in-one-wp-security-and-firewall');?>:</th>
 			<td>
 				<div class="aiowps_switch_container">
-					<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Check this to block all user-agents recommended by 6G', 'all-in-one-wp-security-and-firewall'), 'aiowps_block_agents', $blocked_agents); ?>
+					<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this to block all user-agents recommended by 6G', 'all-in-one-wp-security-and-firewall'), 'aiowps_block_agents', $blocked_agents); ?>
 				</div>
 			</td>
 		</tr>
