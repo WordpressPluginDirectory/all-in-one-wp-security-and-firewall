@@ -192,6 +192,25 @@
 			</table>
 		</div>
 	</div>
+	<div class="postbox">
+		<h3 class="hndle"><label for="title"><?php _e('Add CAPTCHA to password protected pages/posts', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
+		<div class="inside">
+			<?php
+				// Display security info badge
+				$aiowps_feature_mgr->output_feature_details_badge("password_protected-captcha");
+			?>
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row"><?php _e('Enable CAPTCHA on password protected pages/posts', 'all-in-one-wp-security-and-firewall'); ?>:</th>
+					<td>
+						<div class="aiowps_switch_container">
+							<?php AIOWPSecurity_Utility_UI::setting_checkbox(__('Enable this if you want to insert a CAPTCHA field on password-protected posts and pages.', 'all-in-one-wp-security-and-firewall'), 'aiowps_enable_password_protected_captcha', '1' == $aio_wp_security->configs->get_value('aiowps_enable_password_protected_captcha')); ?>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
 	<?php
 	// Only display BuddyPress CAPTCHA settings if buddypress is active
 	if (AIOWPSecurity_Utility::is_buddypress_plugin_active()) {

@@ -3,7 +3,7 @@
 <div class="aio_blue_box">
 	<?php
 	$brute_force_login_feature_link = '<a href="admin.php?page=' . AIOWPSEC_BRUTE_FORCE_MENU_SLUG . '&tab=cookie-based-brute-force-prevention">' . __('Cookie-based brute force login prevention', 'all-in-one-wp-security-and-firewall').'</a>';
-	echo '<p>' . __('One of the ways hackers try to compromise sites is via a ', 'all-in-one-wp-security-and-firewall') . '<strong>' . __('Brute force login attack', 'all-in-one-wp-security-and-firewall') . '</strong>. ' . __('This is where attackers use repeated login attempts until they guess the password.', 'all-in-one-wp-security-and-firewall').'
+	echo '<p>' . __('One of the ways hackers try to compromise sites is via a', 'all-in-one-wp-security-and-firewall') . ' ' .'<strong>' . __('Brute force login attack', 'all-in-one-wp-security-and-firewall') . '</strong>. ' . __('This is where attackers use repeated login attempts until they guess the password.', 'all-in-one-wp-security-and-firewall').'
 	<br />' . __('Apart from choosing strong passwords, monitoring and blocking IP addresses which are involved in repeated login failures in a short period of time is a very effective way to stop these types of attacks.', 'all-in-one-wp-security-and-firewall').
 	'<p>' . sprintf(esc_html(__('You may also want to checkout our %s feature for another secure way to protect against these types of attacks.', 'all-in-one-wp-security-and-firewall')), $brute_force_login_feature_link) . '</p>';
 	?>
@@ -98,7 +98,7 @@
 						}
 						?>
 						<textarea id="aiowps_instantly_lockout_specific_usernames" name="aiowps_instantly_lockout_specific_usernames" cols="50" rows="5"><?php echo esc_textarea(implode("\n", $instant_lockout_users_list)); ?></textarea><br>
-						<span class="description"><?php _e('Insert one username per line. ', 'all-in-one-wp-security-and-firewall') . _e('Existing usernames are not blocked even if present in the list.', 'all-in-one-wp-security-and-firewall'); ?></span>
+						<span class="description"><?php echo __('Insert one username per line.', 'all-in-one-wp-security-and-firewall') . ' ' . __('Existing usernames are not blocked even if present in the list.', 'all-in-one-wp-security-and-firewall'); ?></span>
 					</td>
 				</tr>
 				<tr valign="top">

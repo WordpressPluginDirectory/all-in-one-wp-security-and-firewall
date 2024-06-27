@@ -325,6 +325,14 @@ class AIOWPSecurity_Feature_Item_Manager {
 					'aiowps_enable_custom_login_captcha'
 				)
 			),
+			'password_protected-captcha' => array(
+				'name' => __('Password-protected CAPTCHA', 'all-in-one-wp-security-and-firewall'),
+				'points' => $this->feature_point_1,
+				'level' => $this->sec_level_basic,
+				'options' => array(
+					'aiowps_enable_password_protected_captcha'
+				)
+			),
 			'whitelist-manager-ip-login-whitelisting' => array(
 				'name' => __('Login IP whitelisting', 'all-in-one-wp-security-and-firewall'),
 				'points' => $this->feature_point_3,

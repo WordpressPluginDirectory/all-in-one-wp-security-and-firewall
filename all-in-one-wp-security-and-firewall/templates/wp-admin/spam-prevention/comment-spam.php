@@ -72,12 +72,6 @@
 							<?php
 								echo '<p class="description">'.__('Enable this feature in order to move the spam comments to trash after given number of days.', 'all-in-one-wp-security-and-firewall').'</p>';
 							?>
-							<span class="aiowps_more_info_anchor"><span class="aiowps_more_info_toggle_char">+</span><span class="aiowps_more_info_toggle_text"><?php _e('More info', 'all-in-one-wp-security-and-firewall'); ?></span></span>
-							<div class="aiowps_more_info_body">
-								<?php
-									echo '<p class="description">'.__('Enable this feature in order to move the spam comments to trash after the given number of days.', 'all-in-one-wp-security-and-firewall').'</p>';
-								?>
-							</div>
 						</div>
 					</td>
 				</tr>

@@ -309,21 +309,37 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 		global $aio_wp_security;
 		global $aiowps_firewall_config;
 
-		if (isset($_POST['aiowps_save_internet_bot_settings'])) { // Do form submission tasks
-			$nonce = $_POST['_wpnonce'];
-			if (!wp_verify_nonce($nonce, 'aiowpsec-save-internet-bot-settings-nonce')) {
-				$aio_wp_security->debug_logger->log_debug("Nonce check failed for save internet bot settings!", 4);
-				die("Nonce check failed for save internet bot settings!");
+		if (isset($_POST['aiowps_save_internet_bot_settings'])) { // Do form submission tasks.
+			$nonce_user_cap_result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($_POST['_wpnonce'], 'aiowpsec-save-internet-bot-settings-nonce');
+
+			if (is_wp_error($nonce_user_cap_result)) {
+				$aio_wp_security->debug_logger->log_debug($nonce_user_cap_result->get_error_message(), 4);
+				die($nonce_user_cap_result->get_error_message());
 			}
 
-			$aiowps_firewall_config->set_value('aiowps_block_fake_googlebots', isset($_POST['aiowps_block_fake_googlebots']));
+			$error = false;
+
+			if (isset($_POST['aiowps_block_fake_googlebots'])) {
+				$validated_ip_list_array = AIOWPSecurity_Utility::get_googlebot_ip_ranges();
+
+				if (is_wp_error($validated_ip_list_array)) {
+					$this->show_msg_error(__('The attempt to save the \'Block fake Googlebots\' settings failed, because it was not possible to validate the Googlebot IP addresses:', 'all-in-one-wp-security-and-firewall') . ' ' . $validated_ip_list_array->get_error_message());
+					$error = true;
+				} else {
+					$aiowps_firewall_config->set_value('aiowps_block_fake_googlebots', true);
+				}
+			} else {
+				$aiowps_firewall_config->set_value('aiowps_block_fake_googlebots', false);
+			}
 
 			$aiowps_firewall_config->set_value('aiowps_ban_post_blank_headers', isset($_POST['aiowps_ban_post_blank_headers']));
 
-			//Recalculate points after the feature status/options have been altered
+			// Recalculate points after the feature status/options have been altered.
 			$aiowps_feature_mgr->check_feature_status_and_recalculate_points();
 
-			$this->show_msg_updated(__('The Internet bot settings were successfully saved', 'all-in-one-wp-security-and-firewall'));
+			if (!$error) {
+				$this->show_msg_settings_updated();
+			}
 		}
 
 		$aio_wp_security->include_template('wp-admin/firewall/internet-bots.php');

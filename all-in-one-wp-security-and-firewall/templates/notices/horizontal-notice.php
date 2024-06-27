@@ -14,7 +14,7 @@
 					
 			<?php if (!empty($button_link)) { ?>
 				<div class="aiowps_advert_button_container">
-					<a class="button button-primary" href="<?php esc_attr_e($button_link);?>" target="_blank" onclick="jQuery(this).closest('.aiowps_ad_container').slideUp(); jQuery.post(ajaxurl, {action: 'aios_ajax', subaction: 'dismiss_notice', nonce: '<?php echo wp_create_nonce('wp-security-ajax-nonce'); ?>', data: { notice: '<?php echo $dismiss_time;?>', dismiss_forever: '1'}});">
+					<a class="button button-primary" href="<?php esc_attr_e($button_link, 'all-in-one-wp-security-and-firewall');?>" target="_blank" onclick="jQuery(this).closest('.aiowps_ad_container').slideUp(); jQuery.post(ajaxurl, {action: 'aios_ajax', subaction: 'dismiss_notice', nonce: '<?php echo wp_create_nonce('wp-security-ajax-nonce'); ?>', data: { notice: '<?php echo $dismiss_time;?>', dismiss_forever: '1'}});">
 						<?php _e('Ok, you deserve it', 'all-in-one-wp-security-and-firewall'); ?>
 					</a>
 					<div class="dashicons dashicons-calendar"></div>
@@ -61,7 +61,7 @@
 					
 					if (!empty($button_link) && !empty($button_meta)) {
 				?>
-				<a class="aiowps_notice_link" href="<?php esc_attr_e($button_link);?>"><?php
+				<a class="aiowps_notice_link" href="<?php esc_attr_e($button_link, 'all-in-one-wp-security-and-firewall');?>"><?php
 						if ('updraftcentral' == $button_meta) {
 							_e('Get UpdraftCentral', 'all-in-one-wp-security-and-firewall');
 						} elseif ('updraftplus' == $button_meta) {

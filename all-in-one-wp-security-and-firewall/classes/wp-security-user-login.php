@@ -285,7 +285,7 @@ class AIOWPSecurity_User_Login {
 	 *
 	 * @return Integer get lockout time length.
 	 */
-	private function get_dynamic_lockout_time_length() {
+	public function get_dynamic_lockout_time_length() {
 		global $aio_wp_security;
 
 		$login_fail_count = $this->get_login_fail_count();

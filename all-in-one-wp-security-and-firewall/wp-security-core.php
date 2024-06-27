@@ -8,11 +8,11 @@ if (!class_exists('AIO_WP_Security')) {
 
 	class AIO_WP_Security {
 
-		public $version = '5.3.0';
+		public $version = '5.3.1';
 
 		public $db_version = '2.0.10';
 
-		public $firewall_version = '1.0.7';
+		public $firewall_version = '1.0.8';
 
 		public $plugin_url;
 
@@ -157,6 +157,7 @@ if (!class_exists('AIO_WP_Security')) {
 			
 			if (!defined('AIOWPSEC_PURGE_FAILED_LOGIN_RECORDS_AFTER_DAYS')) define('AIOWPSEC_PURGE_FAILED_LOGIN_RECORDS_AFTER_DAYS', 90);
 			if (!defined('AIOS_PURGE_EVENTS_RECORDS_AFTER_DAYS')) define('AIOS_PURGE_EVENTS_RECORDS_AFTER_DAYS', 90);
+			if (!defined('AIOS_PURGE_LOGIN_LOCKOUT_RECORDS_AFTER_DAYS')) define('AIOS_PURGE_LOGIN_LOCKOUT_RECORDS_AFTER_DAYS', 90);
 			if (!defined('AIOS_PURGE_LOGIN_ACTIVITY_RECORDS_AFTER_DAYS')) define('AIOS_PURGE_LOGIN_ACTIVITY_RECORDS_AFTER_DAYS', 90);
 			if (!defined('AIOS_PURGE_GLOBAL_META_DATA_RECORDS_AFTER_DAYS')) define('AIOS_PURGE_GLOBAL_META_DATA_RECORDS_AFTER_DAYS', 90);
 			if (!defined('AIOS_DEFAULT_BRUTE_FORCE_FEATURE_SECRET_WORD')) define('AIOS_DEFAULT_BRUTE_FORCE_FEATURE_SECRET_WORD', 'aiossecret');

@@ -4,8 +4,8 @@ Donate link: https://david.dw-perspective.org.uk/donate
 Tags: security, malware scanning, two factor authentication, firewall, login security
 Requires PHP: 5.6
 Requires at least: 5.0
-Tested up to: 6.5
-Stable tag: 5.3.0
+Tested up to: 6.6
+Stable tag: 5.3.1
 License: GPLv3 or later
 
 Protect your website investment with All-In-One Security (AIOS) – a comprehensive and easy to use security plugin designed especially for WordPress. Featuring login security tools, a cutting-edge firewall and much more.
@@ -211,6 +211,26 @@ Go to the settings menu after you activate the plugin and follow the instruction
 1. Features list.
 
 == Changelog ==
+
+= 5.3.1 - 26/Jun/2024 =
+
+* FEATURE: Added CAPTCHA to password protected pages/posts
+* FIX: Captcha not showing on the BuddyPress registration page
+* FIX: WooCommerce logout issue when the renamed login page and login whitelist features are both enabled
+* FIX: Missing CAPTCHAs when multiple WooCommerce login and register forms are on the same page
+* FIX: Fixed an issue with the 404 detection actions
+* FIX: A UI issue with the 2FA QR code image
+* TWEAK: Added the attribute data-cfasync="false" to the default captcha url to allow loading on Cloudflare Rocket Loader
+* TWEAK: Purge login lockdown table records after 90 days to restrict size. The AIOS_PURGE_LOGIN_LOCKOUT_RECORDS_AFTER_DAYS constant has been added to change the default.
+* TWEAK: Updated the malware scanner frequency text from daily to weekly
+* TWEAK: Updated the password strength meter UI for the password tool
+* TWEAK: Add a 'Lock IP' and 'Blacklist IP' link to the IP column of the audit log.
+* TWEAK: Enhance fake Googlebot detection. In the case where gethostbyaddr fails, the firewall will fallback to checking against known Googlebot IP ranges
+* TWEAK: Updated the column header for the  "Permanent Blocked IP Addresses" table to be consistent with other tables
+* TWEAK: Prevent warning when DISALLOW_FILE_EDIT has already been defined
+* TWEAK: Fix instances of one translation function being used for multiple sentences
+* TWEAK: Improved the UX during AJAX calls
+* TWEAK: Removed Trash spam comments duplicated description
 
 = 5.3.0 - 01/May/2024 =
 
@@ -728,7 +748,7 @@ Go to the settings menu after you activate the plugin and follow the instruction
 
 = 4.4.4 =
 - Fixed bugs and improved functionality related to "logged in users" functionality.
-- Google recaptha checks for WooCommerce product reviews
+- Google recaptcha checks for WooCommerce product reviews
 - Replaced use of deprecated hook "wpmu_new_blog" with "wp_insert_site"
 - Fixed a potential XSS issue in the settings menu of the plugin for IE11 or older browsers.
 
@@ -1429,4 +1449,4 @@ those who want to enable the basic firewall but do not have "AllowOverride" opti
 - First commit to the WP repository.
 
 == Upgrade Notice ==
-* 5.3.0: Fixes an issue with the cookie based brute force feature and the WooCommerce plugin. Various tweaks, fixes and improvements. See changelog for full details. A recommended update for all.
+* 5.3.1: Added CAPTCHA to password protected pages/posts, fixed multiple WooCommerce issues. Various tweaks, fixes and improvements. See changelog for full details. A recommended update for all.

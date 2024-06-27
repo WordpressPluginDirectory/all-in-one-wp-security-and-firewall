@@ -185,6 +185,12 @@ class AIOWPSecurity_General_Init_Tasks {
 			add_filter('login_form_bottom', array($aio_wp_security->captcha_obj, 'add_captcha_script'), 20);
 		}
 
+		// For password protected pages CAPTCHA feature
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_password_protected_captcha')) {
+			add_filter('the_password_form', array($aio_wp_security->captcha_obj, 'insert_captcha_password_protected'));
+			add_action('login_form_postpass', array($aio_wp_security->captcha_obj, 'validate_password_protected_password_form_with_captcha'));
+		}
+
 		// For honeypot feature
 		if ($aio_wp_security->configs->get_value('aiowps_enable_login_honeypot') == '1') {
 			if (!is_user_logged_in()) {
@@ -270,8 +276,9 @@ class AIOWPSecurity_General_Init_Tasks {
 		}
 
 		// For BuddyPress registration CAPTCHA feature
-		if ($aio_wp_security->configs->get_value('aiowps_enable_bp_register_captcha') == '1') {
-			add_action('bp_account_details_fields', array($aio_wp_security->captcha_obj, 'insert_captcha_question_form'));
+		if ('1' == $aio_wp_security->configs->get_value('aiowps_enable_bp_register_captcha')) {
+			add_action('bp_before_registration_submit_buttons', array($aio_wp_security->captcha_obj, 'insert_captcha_question_form'));
+			add_action('bp_before_registration_submit_buttons', array($aio_wp_security->captcha_obj, 'add_captcha_script'), 10);
 			add_action('bp_signup_validate', array($this, 'buddy_press_signup_validate_captcha'));
 		}
 
@@ -490,7 +497,7 @@ class AIOWPSecurity_General_Init_Tasks {
 			$disabled_message .= '<table class="form-table" role="presentation">';
 			$disabled_message .= '<tbody>';
 			$disabled_message .= '<tr id="disable-password">';
-			$disabled_message .= '<th>'.__('Disabled').'</th>';
+			$disabled_message .= '<th>'.__('Disabled', 'all-in-one-wp-security-and-firewall').'</th>';
 			$disabled_message .= '<td>'.htmlspecialchars(__('Application passwords have been disabled by All In One WP Security & Firewall plugin.', 'all-in-one-wp-security-and-firewall'));
 			if (AIOWPSecurity_Utility_Permissions::has_manage_cap()) {
 				$aiowps_additional_setting_url = 'admin.php?page=aiowpsec_userlogin&tab=additional';
@@ -672,7 +679,7 @@ class AIOWPSecurity_General_Init_Tasks {
 	public function check_rest_api_requests() {
 		$rest_user = wp_get_current_user();
 		if (empty($rest_user->ID)) {
-			$error_message = apply_filters('aiowps_rest_api_error_message', __('You are not authorized to perform this action.', 'disable-wp-rest-api'));
+			$error_message = apply_filters('aiowps_rest_api_error_message', __('You are not authorized to perform this action.', 'all-in-one-wp-security-and-firewall'));
 			wp_die($error_message);
 		}
 	}

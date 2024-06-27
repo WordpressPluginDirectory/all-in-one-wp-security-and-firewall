@@ -1,6 +1,6 @@
 <?php if (!defined('ABSPATH')) die('Access denied.'); ?>
 <h3><?php _e('Block request methods', 'all-in-one-wp-security-and-firewall'); ?></h3>
-<span data-tooltip="<?php echo esc_attr('HTTP request methods are used by browsers and clients to communicate with servers to get responses.', 'all-in-one-wp-security-and-firewall') . ' ' . esc_attr('The below request methods are not necessary for every site to function and you may disable all HTTP request methods that are not essential for your site to function.', 'all-in-one-wp-security-and-firewall');?>">
+<span data-tooltip="<?php echo esc_attr__('HTTP request methods are used by browsers and clients to communicate with servers to get responses.', 'all-in-one-wp-security-and-firewall') . ' ' . esc_attr__('The below request methods are not necessary for every site to function and you may disable all HTTP request methods that are not essential for your site to function.', 'all-in-one-wp-security-and-firewall'); ?>">
 	<span class="dashicons dashicons-editor-help"></span>
 </span>
 <div class="options">

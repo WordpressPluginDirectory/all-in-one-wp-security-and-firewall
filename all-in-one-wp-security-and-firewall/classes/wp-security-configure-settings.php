@@ -53,6 +53,7 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->set_value('aiowps_default_captcha', '');
 		$aio_wp_security->configs->set_value('aiowps_enable_login_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_custom_login_captcha', '');//Checkbox
+		$aio_wp_security->configs->set_value('aiowps_enable_password_protected_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_woo_login_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_woo_lostpassword_captcha', '');//Checkbox
 		$aio_wp_security->configs->set_value('aiowps_enable_woo_register_captcha', '');//Checkbox
@@ -179,6 +180,7 @@ class AIOWPSecurity_Configure_Settings {
 			$aiowps_firewall_config->set_value('aiowps_deny_bad_query_strings', false);//Checkbox
 			$aiowps_firewall_config->set_value('aiowps_advanced_char_string_filter', false);//Checkbox
 			$aiowps_firewall_config->set_value('aiowps_block_fake_googlebots', false); // Checkbox
+			$aiowps_firewall_config->set_value('aiowps_googlebot_ip_ranges', array());
 
 			self::turn_off_all_6g_firewall_configs();
 			self::set_cookie_based_bruteforce_firewall_configs();
@@ -245,6 +247,7 @@ class AIOWPSecurity_Configure_Settings {
 		$aio_wp_security->configs->add_value('aiowps_default_captcha', '');
 		$aio_wp_security->configs->add_value('aiowps_enable_login_captcha', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_custom_login_captcha', '');//Checkbox
+		$aio_wp_security->configs->add_value('aiowps_enable_password_protected_captcha', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_woo_login_captcha', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_woo_register_captcha', '');//Checkbox
 		$aio_wp_security->configs->add_value('aiowps_enable_woo_lostpassword_captcha', '');//Checkbox
@@ -512,7 +515,7 @@ class AIOWPSecurity_Configure_Settings {
 			if (version_compare($firewall_version, '1.0.6', '<')) { //1.0.2 set but here making sure the blank user agent is not saved in settings.php which  may show a 403 error due to not empty user agent check removed from the rule
 				self::set_user_agent_firewall_configs();
 			}
-			if (version_compare($firewall_version, '1.0.7', '<')) {
+			if (version_compare($firewall_version, '1.0.8', '<')) {
 				self::port_block_fake_googlebots_config();
 			}
 		}
@@ -590,6 +593,12 @@ class AIOWPSecurity_Configure_Settings {
 
 		if ('1' == $aio_wp_security->configs->get_value('aiowps_block_fake_googlebots')) {
 			$aiowps_firewall_config->set_value('aiowps_block_fake_googlebots', true);
+
+			$validated_ip_list_array = AIOWPSecurity_Utility::get_googlebot_ip_ranges();
+
+			if (!is_wp_error($validated_ip_list_array)) {
+				$aiowps_firewall_config->set_value('aiowps_googlebot_ip_ranges', $validated_ip_list_array);
+			}
 		} else {
 			$aiowps_firewall_config->set_value('aiowps_block_fake_googlebots', false);
 		}

@@ -82,9 +82,9 @@
 									echo '<br>';
 									_e('1) Enable the checkbox.', 'all-in-one-wp-security-and-firewall');
 									echo '<br>';
-									_e('2) Enter a secret word consisting of alphanumeric characters which will be difficult to guess.', 'all-in-one-wp-security-and-firewall') . _e(' This secret word will be useful whenever you need to know the special URL which you will use to access the login page (see point below).', 'all-in-one-wp-security-and-firewall');
+									echo __('2) Enter a secret word consisting of alphanumeric characters which will be difficult to guess.', 'all-in-one-wp-security-and-firewall') . ' ' . __('This secret word will be useful whenever you need to know the special URL which you will use to access the login page (see point below).', 'all-in-one-wp-security-and-firewall');
 									echo '<br>';
-									_e('3) You will then be provided with a special login URL.', 'all-in-one-wp-security-and-firewall')  . _e(' You will need to use this URL to login to your WordPress site instead of the usual login URL.', 'all-in-one-wp-security-and-firewall');
+									echo __('3) You will then be provided with a special login URL.', 'all-in-one-wp-security-and-firewall') . ' ' . __('You will need to use this URL to login to your WordPress site instead of the usual login URL.', 'all-in-one-wp-security-and-firewall');
 									echo '<br>';
 									_e('NOTE: The system will deposit a special cookie in your browser which will allow you access to the WordPress administration login page.', 'all-in-one-wp-security-and-firewall');
 									echo '<br>';

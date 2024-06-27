@@ -256,6 +256,7 @@ class AIOWPSecurity_Brute_Force_Menu extends AIOWPSecurity_Admin_Menu {
 			$aio_wp_security->configs->set_value('aiowps_enable_woo_register_captcha', isset($_POST["aiowps_enable_woo_register_captcha"]) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_enable_woo_lostpassword_captcha', isset($_POST["aiowps_enable_woo_lostpassword_captcha"]) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_enable_custom_login_captcha', isset($_POST["aiowps_enable_custom_login_captcha"]) ? '1' : '');
+			$aio_wp_security->configs->set_value('aiowps_enable_password_protected_captcha', isset($_POST["aiowps_enable_password_protected_captcha"]) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_enable_lost_password_captcha', isset($_POST["aiowps_enable_lost_password_captcha"]) ? '1' : '');
 			$aio_wp_security->configs->set_value('aiowps_enable_contact_form_7_captcha', isset($_POST["aiowps_enable_contact_form_7_captcha"]) ? '1' : '');
 
@@ -409,13 +410,13 @@ class AIOWPSecurity_Brute_Force_Menu extends AIOWPSecurity_Admin_Menu {
 
 			$lockout_time_length = isset($_POST['aiowps_404_lockout_time_length']) ? sanitize_text_field($_POST['aiowps_404_lockout_time_length']) : '';
 			if (!is_numeric($lockout_time_length)) {
-				$error .= '<br />'.__('You entered a non numeric value for the lockout time length field. It has been set to the default value.', 'all-in-one-wp-security-and-firewall');
+				$error .= '<br />'.__('You entered a non numeric value for the lockout time length field.', 'all-in-one-wp-security-and-firewall') . ' ' . __('It has been set to the default value.', 'all-in-one-wp-security-and-firewall');
 				$lockout_time_length = '60';//Set it to the default value for this field
 			}
 
 			$redirect_url = isset($_POST['aiowps_404_lock_redirect_url']) ? trim($_POST['aiowps_404_lock_redirect_url']) : '';
 			if ('' == $redirect_url || '' == esc_url($redirect_url, array('http', 'https'))) {
-				$error .= '<br />'.__('You entered an incorrect format for the "Redirect URL" field. It has been set to the default value.', 'all-in-one-wp-security-and-firewall');
+				$error .= '<br />'.__('You entered an incorrect format for the "Redirect URL" field.', 'all-in-one-wp-security-and-firewall') . ' ' . __('It has been set to the default value.', 'all-in-one-wp-security-and-firewall');
 				$redirect_url = 'http://127.0.0.1';
 			}
 
