@@ -1,5 +1,5 @@
 <?php if (!defined('ABSPATH')) die('Access denied.'); ?>
-<div class="postbox">
+<div class="postbox aio_hidden" data-template="disable-rss-atom">
 			<h3 class="hndle"><?php _e('Disable WordPress RSS and ATOM feeds', 'all-in-one-wp-security-and-firewall'); ?></h3>
 			<div class="inside">
 				<div id="firewall-disable-rss-and-atom-badge">

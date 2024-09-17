@@ -388,7 +388,7 @@ trait AIOWPSecurity_Firewall_Commands_Trait {
 			return $response;
 		}
 
-		$ips = sanitize_text_field($allowlist);
+		$ips = sanitize_textarea_field(wp_unslash($allowlist));
 		$ips = AIOWPSecurity_Utility_IP::create_ip_list_array_from_string_with_newline($ips);
 		$validated_ip_list_array = AIOWPSecurity_Utility_IP::validate_ip_list($ips, 'firewall_allowlist');
 

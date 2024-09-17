@@ -1,5 +1,5 @@
 <?php if (!defined('ABSPATH')) die('Access denied.'); ?>
-<div class="postbox">
+<div class="postbox aio_hidden" data-template="bad-query-strings">
 		<h3 class="hndle"><label for="title"><?php _e('Bad query strings', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 		<div class="inside">
 			<div id="firewall-deny-bad-queries-badge">

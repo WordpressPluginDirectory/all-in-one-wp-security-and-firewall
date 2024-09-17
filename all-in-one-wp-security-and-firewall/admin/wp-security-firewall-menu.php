@@ -37,7 +37,7 @@ class AIOWPSecurity_Firewall_Menu extends AIOWPSecurity_Admin_Menu {
 			'htaccess-rules' => array(
 				'title' => __('.htaccess rules', 'all-in-one-wp-security-and-firewall'),
 				'render_callback' => array($this, 'render_htaccess_rules'),
-				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
+				'display_condition_callback' => array('AIOWPSecurity_Utility', 'allow_to_write_to_htaccess'),
 			),
 			'6g-firewall' => array(
 				'title' => __('6G firewall rules', 'all-in-one-wp-security-and-firewall'),

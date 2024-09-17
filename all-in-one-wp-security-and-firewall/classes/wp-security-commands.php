@@ -6,6 +6,10 @@ if (class_exists('AIOWPSecurity_Commands')) return;
 
 if (!trait_exists('AIOWPSecurity_Log_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-log-commands.php');
 if (!trait_exists('AIOWPSecurity_Ip_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-ip-commands.php');
+if (!trait_exists('AIOWPSecurity_Comment_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-comment-commands.php');
+if (!trait_exists('AIOWPSecurity_User_Security_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-user-security-commands.php');
+if (!trait_exists('AIOWPSecurity_Settings_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-settings-commands.php');
+if (!trait_exists('AIOWPSecurity_Files_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-files-commands.php');
 if (!trait_exists('AIOWPSecurity_Firewall_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-firewall-commands.php');
 if (!trait_exists('AIOWPSecurity_Tools_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-tools-commands.php');
 if (!trait_exists('AIOWPSecurity_File_Scan_Commands_Trait')) require_once(AIO_WP_SECURITY_PATH.'/classes/commands/wp-security-file-scan-commands.php');
@@ -13,6 +17,10 @@ class AIOWPSecurity_Commands {
 
 	use AIOWPSecurity_Log_Commands_Trait;
 	use AIOWPSecurity_Ip_Commands_Trait;
+	use AIOWPSecurity_Comment_Commands_Trait;
+	use AIOWPSecurity_User_Security_Commands_Trait;
+	use AIOWPSecurity_Settings_Commands_Trait;
+	use AIOWPSecurity_Files_Commands_Trait;
 	use AIOWPSecurity_Firewall_Commands_Trait;
 	use AIOWPSecurity_Tools_Commands_Trait;
 	use AIOWPSecurity_File_Scan_Commands_Trait;

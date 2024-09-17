@@ -390,6 +390,7 @@ class AIOWPSecurity_Admin_Init {
 				'show_info' => __('show more', 'all-in-one-wp-security-and-firewall'),
 				'hide_info' => __('hide', 'all-in-one-wp-security-and-firewall'),
 				'show_notices' => __('But the following notices have been raised', 'all-in-one-wp-security-and-firewall'),
+				'disabling' => __('Disabling...', 'all-in-one-wp-security-and-firewall'),
 				'setting_up_firewall' => __('Setting up firewall...', 'all-in-one-wp-security-and-firewall'),
 				'downgrading_firewall' => __('Downgrading firewall...', 'all-in-one-wp-security-and-firewall'),
 			)
@@ -468,7 +469,7 @@ class AIOWPSecurity_Admin_Init {
 	 * @return Void
 	 */
 	private function do_other_admin_side_init_tasks() {
-		global $aio_wp_security, $aiowps_firewall_config, $simba_two_factor_authentication;
+		global $aio_wp_security;
 
 		//***New Feature improvement for Cookie Based Brute Force Protection***//
 		// The old "test cookie" used to be too easy to guess because someone could just read the code and get the value.
@@ -514,42 +515,6 @@ class AIOWPSecurity_Admin_Init {
 				}
 				$aio_wp_security->configs->save_config();//save the value
 			}
-		}
-
-		if (isset($_POST['aiowps_save_wp_config'])) { // the wp-config backup operation
-			$nonce = $_REQUEST['_wpnonce'];
-			$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($nonce, 'aiowpsec-save-wp-config-nonce');
-			if (is_wp_error($result)) {
-				$aio_wp_security->debug_logger->log_debug($result->get_error_message(), 4);
-				die($result->get_error_message());
-			}
-			$wp_config_path = AIOWPSecurity_Utility_File::get_wp_config_file_path();
-			$result = AIOWPSecurity_Utility_File::backup_and_rename_wp_config($wp_config_path); //Backup the wp_config.php file
-			AIOWPSecurity_Utility_File::download_a_file_option1($wp_config_path, "wp-config-backup.txt");
-		}
-
-		// Handle export settings
-		if (isset($_POST['aiowps_export_settings'])) { // Do form submission tasks
-			$nonce = $_REQUEST['_wpnonce'];
-			$result = AIOWPSecurity_Utility_Permissions::check_nonce_and_user_cap($nonce, 'aiowpsec-export-settings-nonce');
-			if (is_wp_error($result)) {
-				$aio_wp_security->debug_logger->log_debug($result->get_error_message(), 4);
-				die($result->get_error_message());
-			}
-
-			$config_data = array();
-			$config_data['general'] = get_option('aio_wp_security_configs');
-
-			if (is_main_site() && is_super_admin()) {
-				$config_data['firewall'] = $aiowps_firewall_config->get_contents();
-
-				if (true == $simba_two_factor_authentication->is_tfa_integrated) {
-					$config_data['tfa'] = $simba_two_factor_authentication->get_configs();
-				}
-			}
-
-			$output = json_encode($config_data);
-			AIOWPSecurity_Utility_File::download_content_to_a_file($output);
 		}
 	}
 

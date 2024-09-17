@@ -5,7 +5,7 @@ Tags: security, malware scanning, two factor authentication, firewall, login sec
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 6.6
-Stable tag: 5.3.2
+Stable tag: 5.3.3
 License: GPLv3 or later
 
 Protect your website investment with All-In-One Security (AIOS) – a comprehensive and easy to use security plugin designed especially for WordPress. Featuring login security tools, a cutting-edge firewall and much more.
@@ -211,6 +211,24 @@ Go to the settings menu after you activate the plugin and follow the instruction
 1. Features list.
 
 == Changelog ==
+
+= 5.3.3 - 16/Sep/2024 =
+
+* FEATURE: Added captcha option for WooCommerce classic guest checkout page.
+* FIX: Fixed responsive layout issues with dashboard notice logo on mobile devices.
+* FIX: Turnstile captcha widget showing multiple times
+* FIX: Solved memory issue for reading larger host system log file 
+* FIX: Removed .htaccess options from the Settings menu on Nginx, IIS and unsupported web servers
+* FIX: Resolved UX popup issue and firewall allowlist sanitization
+* FIX: Resolved an issue where bulk table actions were still executed even if the confirmation dialog was canceled.
+* FIX: Added a null check to prevent PHP warnings in firewall rules
+* TWEAK: Ajaxified the actions in the settings, filesystem security, spam prevention and user security menu
+* TWEAK: Added Ajax support to list tables and the audit log
+* TWEAK: Added CAPTCHA field to MemberPress forgot password and registration forms
+* TWEAK: Excluded .htaccess tabs from settings if the server is not supported
+* TWEAK: Updated the firewall rules UI and malware scanner description
+* TWEAK: Tweaked the htaccess backup method to generate the random filename
+* TWEAK: Removed 'prevent access to default WP files' from .htaccess and added 'license.txt' to deletion list.
 
 = 5.3.2 - 06/Aug/2024 =
 
@@ -1464,4 +1482,4 @@ those who want to enable the basic firewall but do not have "AllowOverride" opti
 - First commit to the WP repository.
 
 == Upgrade Notice ==
-* 5.3.2: Added captcha support for the MemberPress plugin, fixes for multisites and various tweaks. See changelog for full details. A recommended update for all.
+* 5.3.3: Added full captcha support for the MemberPress plugin, UI enhancements and various tweaks. See changelog for full details. A recommended update for all.

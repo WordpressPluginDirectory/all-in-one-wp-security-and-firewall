@@ -162,12 +162,12 @@ class AIOWPSecurity_Feature_Item_Manager {
 					'aiowps_disable_file_editing'
 				)
 			),
-			'block-wp-files-access' => array(
+			'auto-delete-wp-files' => array(
 				'name' => __('WordPress files access', 'all-in-one-wp-security-and-firewall'),
 				'points' => $this->feature_point_2,
 				'level' => $this->sec_level_basic,
 				'options' => array(
-					'aiowps_prevent_default_wp_file_access'
+					'aiowps_auto_delete_default_wp_files'
 				)
 			),
 			// Blacklist Manager menu features
@@ -186,7 +186,8 @@ class AIOWPSecurity_Feature_Item_Manager {
 				'level' => $this->sec_level_basic,
 				'options' => array(
 					'aiowps_enable_basic_firewall'
-				)
+				),
+				'feature_condition_callback' => array('AIOWPSecurity_Utility', 'allow_to_write_to_htaccess')
 			),
 			'firewall-pingback-rules' => array(
 				'name' => __('Enable pingback vulnerability protection', 'all-in-one-wp-security-and-firewall'),
@@ -202,7 +203,8 @@ class AIOWPSecurity_Feature_Item_Manager {
 				'level' => $this->sec_level_inter,
 				'options' => array(
 					'aiowps_block_debug_log_file_access'
-				)
+				),
+				'feature_condition_callback' => array('AIOWPSecurity_Utility', 'allow_to_write_to_htaccess')
 			),
 			'firewall-disable-index-views' => array(
 				'name' => __('Disable index views', 'all-in-one-wp-security-and-firewall'),
@@ -210,7 +212,8 @@ class AIOWPSecurity_Feature_Item_Manager {
 				'level' => $this->sec_level_inter,
 				'options' => array(
 					'aiowps_disable_index_views'
-				)
+				),
+				'feature_condition_callback' => array('AIOWPSecurity_Utility', 'allow_to_write_to_htaccess')
 			),
 			'firewall-disable-trace-track' => array(
 				'name' => __('Disable trace and track', 'all-in-one-wp-security-and-firewall'),
@@ -218,7 +221,8 @@ class AIOWPSecurity_Feature_Item_Manager {
 				'level' => $this->sec_level_advanced,
 				'options' => array(
 					'aiowps_disable_trace_and_track'
-				)
+				),
+				'feature_condition_callback' => array('AIOWPSecurity_Utility', 'allow_to_write_to_htaccess')
 			),
 			'firewall-forbid-proxy-comments' => array(
 				'name' => __('Forbid proxy comments', 'all-in-one-wp-security-and-firewall'),
@@ -467,6 +471,15 @@ class AIOWPSecurity_Feature_Item_Manager {
 				'level' => $this->sec_level_basic,
 				'options' => array(
 					'aiowps_enable_woo_register_captcha'
+				),
+				'feature_condition_callback' => array('AIOWPSecurity_Utility', 'is_woocommerce_plugin_active'),
+			),
+			'woo-checkout-captcha' => array(
+				'name' => __('Woo Checkout CAPTCHA', 'all-in-one-wp-security-and-firewall'),
+				'points' => $this->feature_point_2,
+				'level' => $this->sec_level_basic,
+				'options' => array(
+					'aiowps_enable_woo_checkout_captcha'
 				),
 				'feature_condition_callback' => array('AIOWPSecurity_Utility', 'is_woocommerce_plugin_active'),
 			),

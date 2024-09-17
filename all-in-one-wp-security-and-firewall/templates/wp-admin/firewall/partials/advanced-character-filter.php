@@ -1,5 +1,5 @@
 <?php if (!defined('ABSPATH')) die('Access denied.'); ?>
-<div class="postbox">
+<div class="postbox aio_hidden" data-template="advanced-character-filter">
 		<h3 class="hndle"><label for="title"><?php _e('Advanced character string filter', 'all-in-one-wp-security-and-firewall'); ?></label></h3>
 		<div class="inside">
 		<div id="firewall-advanced-character-string-filter-badge">

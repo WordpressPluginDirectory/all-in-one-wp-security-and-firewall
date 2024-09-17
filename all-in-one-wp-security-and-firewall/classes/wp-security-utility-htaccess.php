@@ -164,6 +164,7 @@ class AIOWPSecurity_Utility_Htaccess {
 		// figure out what server is being used
 		$serverType = AIOWPSecurity_Utility::get_server_type();
 		$error_msg = __('An error has occurred while writing to the .htaccess file.', 'all-in-one-wp-security');
+
 		if (in_array($serverType, array('-1', 'nginx', 'iis')) && !defined('WP_CLI')) {
 			AIOWPSecurity_Admin_Menu::show_msg_error_st($error_msg . ' ' . __('The .htaccess file is not supported by your web server.', 'all-in-one-wp-security'), !$show_error);
 			$aio_wp_security->debug_logger->log_debug("Unable to write to .htaccess - server type not supported.", 4);
@@ -323,7 +324,6 @@ class AIOWPSecurity_Utility_Htaccess {
 	public static function getrules() {
 		global $aio_wp_security;
 		$rules = "";
-		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_block_wp_file_access();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_basic_htaccess();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_block_debug_log_access_htaccess();
 		$rules .= AIOWPSecurity_Utility_Htaccess::getrules_disable_index_views();
@@ -345,24 +345,6 @@ class AIOWPSecurity_Utility_Htaccess {
 		//Add outer markers if we have rules
 		if ('' != $rules) {
 			$rules = "# BEGIN All In One WP Security" . "\n" . $rules . "# END All In One WP Security" . "\n";
-		}
-
-		return $rules;
-	}
-
-	/**
-	 * This function will write rules to prevent people from accessing the following files:
-	 * readme.html, license.txt and wp-config-sample.php.
-	 */
-	public static function getrules_block_wp_file_access() {
-		global $aio_wp_security;
-		$rules = '';
-		if ($aio_wp_security->configs->get_value('aiowps_prevent_default_wp_file_access') == '1') {
-			$rules .= AIOWPSecurity_Utility_Htaccess::$prevent_wp_file_access_marker_start . "\n"; //Add feature marker start
-			$rules .= self::create_apache2_access_denied_rule('license.txt');
-			$rules .= self::create_apache2_access_denied_rule('wp-config-sample.php');
-			$rules .= self::create_apache2_access_denied_rule('readme.html');
-			$rules .= AIOWPSecurity_Utility_Htaccess::$prevent_wp_file_access_marker_end . "\n"; //Add feature marker end
 		}
 
 		return $rules;
@@ -734,5 +716,10 @@ END;
 		}
 
 		return $output;
+	}
+
+	public static function get_htaccess_path() {
+		$home_path = AIOWPSecurity_Utility_File::get_home_path();
+		return $home_path . '.htaccess';
 	}
 }

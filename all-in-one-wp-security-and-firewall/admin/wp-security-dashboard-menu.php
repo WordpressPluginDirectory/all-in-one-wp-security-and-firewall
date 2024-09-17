@@ -376,20 +376,22 @@ class AIOWPSecurity_Dashboard_Menu extends AIOWPSecurity_Admin_Menu {
 		echo '</div></div></a>';
 		echo '<div class="aio_clear_float"></div>';
 
-		$basic_firewall_feature = $aiowps_feature_mgr->get_feature_item_by_id("firewall-basic-rules");
-		echo '<div class="aiowps_feature_status_container">';
-		echo '<div class="aiowps_feature_status_name">' . __('Basic firewall', 'all-in-one-wp-security-and-firewall') . '</div>';
-		echo '<a href="admin.php?page=' . AIOWPSEC_FIREWALL_MENU_SLUG . '&tab=htaccess-rules">';
-		echo '<div class="aiowps_feature_status_bar">';
-		if ($basic_firewall_feature->is_active()) {
-			echo '<div class="aiowps_feature_status_label aiowps_feature_status_on">' . __('On', 'all-in-one-wp-security-and-firewall') . '</div>';
-			echo '<div class="aiowps_feature_status_label">' . __('Off', 'all-in-one-wp-security-and-firewall') . '</div>';
-		} else {
-			echo '<div class="aiowps_feature_status_label">' . __('On', 'all-in-one-wp-security-and-firewall') . '</div>';
-			echo '<div class="aiowps_feature_status_label aiowps_feature_status_off">' . __('Off', 'all-in-one-wp-security-and-firewall') . '</div>';
+		if (AIOWPSecurity_Utility::allow_to_write_to_htaccess()) {
+			$basic_firewall_feature = $aiowps_feature_mgr->get_feature_item_by_id("firewall-basic-rules");
+			echo '<div class="aiowps_feature_status_container">';
+			echo '<div class="aiowps_feature_status_name">' . __('Basic firewall', 'all-in-one-wp-security-and-firewall') . '</div>';
+			echo '<a href="admin.php?page=' . AIOWPSEC_FIREWALL_MENU_SLUG . '&tab=htaccess-rules">';
+			echo '<div class="aiowps_feature_status_bar">';
+			if ($basic_firewall_feature->is_active()) {
+				echo '<div class="aiowps_feature_status_label aiowps_feature_status_on">' . __('On', 'all-in-one-wp-security-and-firewall') . '</div>';
+				echo '<div class="aiowps_feature_status_label">' . __('Off', 'all-in-one-wp-security-and-firewall') . '</div>';
+			} else {
+				echo '<div class="aiowps_feature_status_label">' . __('On', 'all-in-one-wp-security-and-firewall') . '</div>';
+				echo '<div class="aiowps_feature_status_label aiowps_feature_status_off">' . __('Off', 'all-in-one-wp-security-and-firewall') . '</div>';
+			}
+			echo '</div></div></a>';
+			echo '<div class="aio_clear_float"></div>';
 		}
-		echo '</div></div></a>';
-		echo '<div class="aio_clear_float"></div>';
 	}
 
 	/**

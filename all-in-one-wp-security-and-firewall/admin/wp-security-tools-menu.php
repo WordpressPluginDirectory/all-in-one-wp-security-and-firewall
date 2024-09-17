@@ -39,7 +39,7 @@ class AIOWPSecurity_Tools_Menu extends AIOWPSecurity_Admin_Menu {
 			'custom-rules' => array(
 				'title' => __('Custom .htaccess rules', 'all-in-one-wp-security-and-firewall'),
 				'render_callback' => array($this, 'render_custom_rules'),
-				'display_condition_callback' => array('AIOWPSecurity_Utility_Permissions', 'is_main_site_and_super_admin'),
+				'display_condition_callback' => array('AIOWPSecurity_Utility', 'allow_to_write_to_htaccess'),
 			),
 			'visitor-lockout' => array(
 				'title' => __('Visitor lockout', 'all-in-one-wp-security-and-firewall'),
