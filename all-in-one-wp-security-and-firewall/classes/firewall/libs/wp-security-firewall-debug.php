@@ -30,7 +30,6 @@ class Debug {
 	 */
 	public function rule_debug($event, Rule $rule) {
 		global $aiowps_firewall_constants, $aiowps_firewall_message_store;
-
 		if (!$aiowps_firewall_constants->AIOS_FIREWALL_DEBUG && 'rule_triggered' !== $event) return;
 
 		$details = array(
@@ -51,6 +50,10 @@ class Debug {
 		$details['request'] = $_SERVER;
 		unset($details['request']['HTTP_COOKIE']);
 
-		$aiowps_firewall_message_store->set($event, $details);
+		// Uncomment when the firewall log issues have been resolved
+		//$aiowps_firewall_message_store->set($event, $details);
+
+		// Remove when the firewall log issues have been resolved
+		$aiowps_firewall_message_store->clear_message_store();
 	}
 }

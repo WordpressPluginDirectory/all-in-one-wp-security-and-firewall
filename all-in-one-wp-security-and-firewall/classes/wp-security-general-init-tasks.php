@@ -793,7 +793,7 @@ class AIOWPSecurity_General_Init_Tasks {
 		$rest_user = wp_get_current_user();
 		if (empty($rest_user->ID)) {
 			$error_message = apply_filters('aiowps_rest_api_error_message', __('You are not authorized to perform this action.', 'all-in-one-wp-security-and-firewall'));
-			wp_die($error_message);
+			wp_die($error_message, '', 403);
 		}
 	}
 
