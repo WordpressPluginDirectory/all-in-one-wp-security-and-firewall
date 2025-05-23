@@ -305,7 +305,7 @@ class AIOWPSecurity_Commands {
 		global $aio_wp_security;
 
 		// Sanitize the email address first.
-		$sanitized_email = sanitize_email($data['report_email'] ?? '');
+		$sanitized_email = !empty($data['report_email']) ? sanitize_email($data['report_email']) : '';
 
 		if ('' === $sanitized_email || !is_email($sanitized_email)) {
 			return array(
@@ -313,9 +313,9 @@ class AIOWPSecurity_Commands {
 				'message' => __('Invalid email address.', 'all-in-one-wp-security-and-firewall'),
 			);
 		}
-			
-		$result = $aio_wp_security->debug_obj->send_report($sanitized_email);
-		
+
+		$result = $aio_wp_security->debug_obj->send_report($sanitized_email, wp_kses_post(html_entity_decode($data['report_sections'])));
+
 		if ($result) {
 			return array(
 				'status' => 'success',
