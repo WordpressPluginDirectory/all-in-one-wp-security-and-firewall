@@ -7,29 +7,28 @@ if (trait_exists('AIOWPSecurity_User_Security_Commands_Trait')) return;
 trait AIOWPSecurity_User_Security_Commands_Trait {
 
 	/**
-	 * Performs the action to save the user enumeration prevention feature settings.
+	 * Saves user account security settings.
 	 *
-	 * @param array $data An array containing the data to be saved.
-	 *                    The array may contain the following key:
-	 *                    - 'aiowps_prevent_users_enumeration': A boolean indicating whether to enable user enumeration prevention.
-	 * @return array Returns an array containing the status of the operation ('success' or 'error'),
-	 *               a message indicating the result of the operation,
-	 *               and a badge representing the updated feature details.
+	 * This function updates security settings related to user enumeration prevention
+	 * and strong password enforcement in the AIO WP Security plugin.
+	 *
+	 * @param array $data An associative array containing the security settings:
+	 *                    - 'aiowps_prevent_users_enumeration' (optional): Set to '1' to prevent user enumeration.
+	 *                    - 'aiowps_enforce_strong_password' (optional): Set to '1' to enforce strong passwords.
+	 *
+	 * @return array The response array containing:
+	 *               - 'badges' (array): A list of applied security badges.
 	 */
-	public function perform_save_user_enumeration($data) {
+	public function perform_save_user_account_settings($data) {
 		global $aio_wp_security;
-
-		$response = array(
-			'status' => 'success'
-		);
 
 		// Save settings
 		$aio_wp_security->configs->set_value('aiowps_prevent_users_enumeration', isset($data["aiowps_prevent_users_enumeration"]) ? '1' : '', true);
+		$aio_wp_security->configs->set_value('aiowps_enforce_strong_password', isset($data['aiowps_enforce_strong_password']) ? '1' : '', true);
 
-		$response['message'] = __('The settings have been successfully updated.', 'all-in-one-wp-security-and-firewall');
-		$response['badges'] = $this->get_features_id_and_html(array('disable-users-enumeration'));
+		$badges = array('enforce-strong-password', 'disable-users-enumeration');
 
-		return $response;
+		return $this->handle_response(true, '', array('badges' => $badges));
 	}
 
 	/**
@@ -335,6 +334,25 @@ trait AIOWPSecurity_User_Security_Commands_Trait {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Performs the action to save the HIBP settings.
+	 *
+	 * @param array $data An array containing the data to be saved.
+	 *
+	 * @return array Returns an array containing the status of the operation ('success' or 'error'),
+	 *               a message indicating the result of the operation,
+	 *               and a badge representing the updated feature details.
+	 */
+	public function perform_save_hibp_settings($data) {
+		global $aio_wp_security;
+
+		$aio_wp_security->configs->set_value('aiowps_hibp_user_profile_update', isset($data['aiowps_hibp_user_profile_update']) ? '1' : '', true);
+		$aio_wp_security->configs->set_value('aiowps_http_password_reset', isset($data['aiowps_http_password_reset']) ? '1' : '', true);
+		$aio_wp_security->configs->save_config();
+
+		return $this->handle_response(true, false, array('badges' => array('hibp')));
 	}
 
 	/**
@@ -647,4 +665,52 @@ trait AIOWPSecurity_User_Security_Commands_Trait {
 		return $diff > $logout_time_interval_val_seconds;
 	}
 
+	/**
+	 * Whitelists user's IP address
+	 *
+	 * @return array Returns an array containing the status of the operation ('success' or 'error'),
+	 *               a message indicating the result of the operation,
+	 *               and a badge representing the updated feature details.
+	 */
+	public function perform_whitelist_user_ip() {
+		$response = array(
+			'status' => 'success'
+		);
+
+		if (!AIOWPSecurity_Utility_Permissions::has_manage_cap()) {
+			$response['status'] = 'error';
+			$response['message'] = __('You don\'t have enough permissions to whitelist your IP address.', 'all-in-one-wp-security-and-firewall');
+			return $response;
+		}
+
+		$aiowps_firewall_allow_list = AIOS_Firewall_Resource::request(AIOS_Firewall_Resource::ALLOW_LIST);
+
+		$whitelisted_ips = $aiowps_firewall_allow_list::get_ips();
+		$is_whitelisted = $aiowps_firewall_allow_list::is_ip_allowed();
+
+		if ($is_whitelisted) {
+			$response['status'] = 'error';
+			$response['message'] = __('Your IP address is already whitelisted.', 'all-in-one-wp-security-and-firewall');
+			return $response;
+		} else {
+			$user_ip = AIOWPSecurity_Utility_IP::get_user_ip_address();
+
+			if (empty($user_ip)) {
+				$response['status'] = 'error';
+				$response['message'] = __('Your IP address could not be detected.', 'all-in-one-wp-security-and-firewall');
+				return $response;
+			}
+
+			$whitelisted_ips .= (empty($whitelisted_ips) ? '' : "\n") . $user_ip;
+
+			if (!$aiowps_firewall_allow_list::add_ips($whitelisted_ips)) {
+				$response['status'] = 'error';
+				$response['message'] = __('There was an error whitelisting your IP address, please try again.', 'all-in-one-wp-security-and-firewall');
+				return $response;
+			}
+
+			$response['message'] = __('Your IP address has been whitelisted successfully.', 'all-in-one-wp-security-and-firewall');
+			return $response;
+		}
+	}
 }
