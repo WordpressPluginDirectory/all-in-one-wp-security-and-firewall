@@ -87,6 +87,9 @@ class AIOWPSecurity_Onboarding {
 	 * @return void
 	 */
 	public static function maybe_redirect_to_dashboard_page() {
+		if (get_option('teamupdraft_installation_source_all-in-one-wp-security-and-firewall') || get_site_option('teamupdraft_installation_source_all-in-one-wp-security-and-firewall')) {
+			return;
+		}
 		if (get_transient(self::PREFIX . '_redirect_to_dashboard_page') && (!isset($_GET['page']) || AIOWPSEC_MAIN_MENU_SLUG !== $_GET['page'])) {
 			delete_transient(self::PREFIX . '_redirect_to_dashboard_page');
 			AIOWPSecurity_Utility::redirect_to_url(get_admin_url(get_main_site_id(), 'admin.php?page='.AIOWPSEC_MAIN_MENU_SLUG));
@@ -195,7 +198,7 @@ class AIOWPSecurity_Onboarding {
 		$user_id = wp_get_current_user()->ID;
 		$tfa_step = array();
 
-		if (!$simba_two_factor_authentication->is_activated_by_user($user_id)) {
+		if (isset($simba_two_factor_authentication) && isset($simba_two_factor_authentication->get_controllers()['totp']) && !$simba_two_factor_authentication->is_activated_by_user($user_id)) {
 			$totp_controller = $simba_two_factor_authentication->get_controller('totp');
 
 			$algorithm_type = $totp_controller->get_user_otp_algorithm($user_id);
@@ -643,6 +646,16 @@ class AIOWPSecurity_Onboarding {
 			);
 		}
 
+		if (!isset($simba_two_factor_authentication) || !isset($simba_two_factor_authentication->get_controllers()['totp'])) {
+			return new WP_REST_Response(
+				array(
+					'success'         => false,
+					'request_success' => true,
+				),
+				500
+			);
+		}
+
 		$totp_controller = $simba_two_factor_authentication->get_controller('totp');
 
 		$user_id = wp_get_current_user()->ID;
@@ -864,7 +877,9 @@ class AIOWPSecurity_Onboarding {
 
 					$user_id = wp_get_current_user()->ID;
 
-					$simba_two_factor_authentication->change_tfa_enabled_status($user_id, 'true');
+					if (isset($simba_two_factor_authentication)) {
+						$simba_two_factor_authentication->change_tfa_enabled_status($user_id, 'true');
+					}
 				} elseif ('tfa_all_roles' === $id && $value && $this->is_premium) {
 					global $wp_roles;
 
